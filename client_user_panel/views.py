@@ -51,12 +51,12 @@ def add_client_info(request):
                             new_client_admin_email = post_data['email']
                             new_client_admin_super_admin = True
                             new_client_admin_password = post_data['password']
-                            new_client_admin_admin = AdminUser(Client=new_client,
-                                                               username=new_client_admin_username,
-                                                               Name=new_client_admin_name,
-                                                               Email=new_client_admin_email,
-                                                               Admin=new_client_admin_super_admin)
-                                                               # Phone=new_client_admin_phone)
+                            new_client_admin_admin = ClientUser(Client=new_client,
+                                                                username=new_client_admin_username,
+                                                                Name=new_client_admin_name,
+                                                                Email=new_client_admin_email,
+                                                                Admin=new_client_admin_super_admin,
+                                                                Phone=new_client_admin_phone)
                             new_client_admin_admin.save()
                             new_user = User.objects.create_user(new_client_admin_username,
                                                                 new_client_admin_email,
@@ -85,3 +85,42 @@ def add_client_info(request):
         display = redirect('/add_admin/')
     return display
 
+
+def client_modification(request):
+    if 'user' in request.session:
+        user = request.session['user']
+        get_data = request.GET
+        # if admin
+        if AdminUser.objects.filter(username__exact=user).exists():
+
+            admin = True
+            admin_user = AdminUser.objects.get(username__exact=user)
+            admin_admin = admin_user.Admin
+            if admin_user.Active and admin_admin:
+                username = get_data['username']
+                action = get_data['action']
+                selected_user = Client.objects.get(ClientName__exact=username)
+                if action == '1':
+                    selected_user.Active = True
+                    selected_user.save()
+                elif action == '2':
+                    selected_user.Active = False
+                    selected_user.save()
+                all_client_users = Client.objects.all()
+
+                display = render(request, 'client_list.html',
+                                 {'wrong': True,
+                                  'text': 'Success',
+                                  'admin': admin,
+                                  'all_client_users': all_client_users})
+            else:
+                logout(request)
+                display = render(request, 'login.html',
+                                 {'wrong': True,
+                                  'text': 'You are not authorized to login.'
+                                          ' Please contact administrator for more details'})
+        else:
+            display = redirect('/')
+    else:
+        display = redirect('/login')
+    return display

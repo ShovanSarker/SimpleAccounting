@@ -75,31 +75,6 @@ def add_admin_info(request):
     return display
 
 
-@login_required(login_url='/login/')
-def admin_list(request):
-    user = request.session['user']
-    # if admin
-    if AdminUser.objects.filter(username__exact=user).exists():
-        admin = True
-        admin_user = AdminUser.objects.get(username__exact=user)
-        admin_admin = admin_user.Admin
-        if admin_user.Active and admin_admin:
-            all_admin_users = AdminUser.objects.all()
-            display = render(request, 'admin_list.html',
-                             {'admin': admin,
-                              'admin_admin': admin_admin,
-                              'all_admin_users': all_admin_users})
-        else:
-            logout(request)
-            display = render(request, 'login.html',
-                             {'wrong': True,
-                              'text': 'You are not authorized to login.'
-                                      ' Please contact administrator for more details'})
-    else:
-        display = redirect('/')
-    return display
-
-
 def admin_modification(request):
     if 'user' in request.session:
         user = request.session['user']

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-8">
+                <h1 class="page-header">Admin Users</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-10">
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover uiDataTables" >
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Active</th>
+                            <th>Date Joined</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for admins in all_client_users %}
+                            <tr>
+                                <td>{{admins.ClientName}}</td>
+                                <td>{{admins.Address}}</td>
+                                <td>{% if admins.Active %}Active<a href="/client_modification/?username={{admins.ClientName}}&action=2">(Deactivate ?)</a>{% else %} Deactivated <a href="/client_modification/?username={{admins.ClientName}}&action=1">(Activate ?)</a> {% endif %}</td>
+                                <td>{{admins.DateAdded}}</td>
+                                <td>not fixed yet</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        {% if wrong %}
+            <div class="alert alert-danger alert-dismissable">
+                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+                <p align="center">{{ text }}</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
