@@ -120,4 +120,30 @@ def add_admin(request):
     return display
 
 
-
+@login_required(login_url='/login/')
+def add_client(request):
+    user = request.session['user']
+    if not AdminUser.objects.exists():
+        print(request.session['user'])
+        new_admin = AdminUser(username=user, Name=user, Email=user+'@inflack.com', Admin=True)
+        new_admin.save()
+    # if admin
+    if AdminUser.objects.filter(username__exact=user).exists():
+        admin = True
+        admin_user = AdminUser.objects.get(username__exact=user)
+        admin_admin = admin_user.Admin
+        if admin_user.Active:
+            if admin_admin:
+                display = render(request, 'add_client.html', {'admin': admin,
+                                                              'admin_admin': admin_admin})
+            else:
+                display = render(request, 'access_denied.html', {'admin': admin,
+                                                                 'admin_admin': admin_admin})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    else:
+        display = redirect('/')
+    return display
