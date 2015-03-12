@@ -95,8 +95,7 @@ def client_modification(request):
 
             admin = True
             admin_user = AdminUser.objects.get(username__exact=user)
-            admin_admin = admin_user.Admin
-            if admin_user.Active and admin_admin:
+            if admin_user.Active:
                 username = get_data['username']
                 action = get_data['action']
                 selected_user = Client.objects.get(ClientName__exact=username)
@@ -113,6 +112,50 @@ def client_modification(request):
                                   'text': 'Success',
                                   'admin': admin,
                                   'all_client_users': all_client_users})
+            else:
+                logout(request)
+                display = render(request, 'login.html',
+                                 {'wrong': True,
+                                  'text': 'You are not authorized to login.'
+                                          ' Please contact administrator for more details'})
+        else:
+            display = redirect('/')
+    else:
+        display = redirect('/login')
+    return display
+
+
+def client_user_modification(request):
+    if 'user' in request.session:
+        user = request.session['user']
+        get_data = request.GET
+        # if admin
+        if ClientUser.objects.filter(username__exact=user).exists():
+            client_user = ClientUser.objects.get(username__exact=user)
+            client = True
+            client_admin = client_user.Admin
+            admin_user = ClientUser.objects.get(username__exact=user)
+            client_object = client_user.Client
+            all_users_of_client = ClientUser.objects.filter(Client=client_object)
+            if admin_user.Active:
+                username = get_data['username']
+                action = get_data['action']
+                selected_user = ClientUser.objects.get(username__exact=username)
+                if action == '1':
+                    selected_user.Active = True
+                    selected_user.save()
+                elif action == '2':
+                    selected_user.Active = False
+                    selected_user.save()
+                all_client_users = Client.objects.all()
+
+                display = render(request, 'client_user_list.html',
+                                 {'wrong': True,
+                                  'text': 'Success',
+                                  'all_client_users': all_client_users,
+                                  'all_client': all_users_of_client,
+                                  'client': client,
+                                  'client_admin': client_admin})
             else:
                 logout(request)
                 display = render(request, 'login.html',

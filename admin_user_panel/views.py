@@ -75,6 +75,7 @@ def add_admin_info(request):
     return display
 
 
+@login_required(login_url='/login/')
 def admin_modification(request):
     if 'user' in request.session:
         user = request.session['user']

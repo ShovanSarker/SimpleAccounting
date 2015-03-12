@@ -182,11 +182,12 @@ def client_list(request):
         admin = True
         admin_user = AdminUser.objects.get(username__exact=user)
         admin_admin = admin_user.Admin
-        if admin_user.Active and admin_admin:
+        if admin_user.Active:
             all_client_users = Client.objects.all()
             display = render(request, 'client_list.html',
                              {'admin': admin,
-                              'all_client_users': all_client_users})
+                              'all_client_users': all_client_users,
+                              'admin_admin': admin_admin})
         else:
             logout(request)
             display = render(request, 'login.html',
@@ -195,4 +196,30 @@ def client_list(request):
                                       ' Please contact administrator for more details'})
     else:
         display = redirect('/')
+    return display
+
+
+@login_required(login_url='/login/')
+def client_users_list(request):
+    user = request.session['user']
+    # if client
+    if ClientUser.objects.filter(username__exact=user).exists():
+        client = True
+        client_user = ClientUser.objects.get(username__exact=user)
+        client_admin = client_user.Admin
+        client_object = client_user.Client
+        all_users_of_client = ClientUser.objects.filter(Client=client_object)
+        if client_user.Active:
+            display = render(request, 'client_user_list.html', {'all_client': all_users_of_client,
+                                                                'client': client,
+                                                                'client_admin': client_admin})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    else:
+        display = render(request, 'access_denied.html',
+                         {'wrong': True,
+                          'text': 'Something went wrong. Please LOGIN again.'})
     return display

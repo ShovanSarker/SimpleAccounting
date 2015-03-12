@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-8">
+                <h1 class="page-header">Admin Users</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-10">
+                <div class="dataTable_wrapper">
+                    <table class="table table-striped table-bordered table-hover uiDataTables" >
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Username</th>
+                            <th>Admin</th>
+                            <th>Active</th>
+                            <th>Date Joined</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for client_user in all_client %}
+                            <tr>
+                                <td>{{client_user.Name}}</td>
+                                <td>{{client_user.Email}}</td>
+                                <td>{{client_user.Phone}}</td>
+                                <td>{{client_user.username}}</td>
+                                <td>{% if client_user.Admin %} admin<a href="/client_user_modification/?username={{client_user.username}}&action=2">(Demote to normal User)</a>{% else %} non-admin<a href="/client_user_modification/?username={{client_user.username}}&action=1">(Promote to admin User)</a> {% endif %}</td>
+                                <td>{% if client_user.Active %}Active<a href="/client_user_modification/?username={{client_user.username}}&action=4">(Deactivate ?)</a>{% else %} Deactivated <a href="/client_user_modification/?username={{client_user.username}}&action=3">(Activate ?)</a> {% endif %}</td>
+                                <td>{{client_user.DateAdded}}</td>
+                                <td>not fixed yet</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        {% if wrong %}
+            <div class="alert alert-danger alert-dismissable">
+                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+                <p align="center">{{ text }}</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
