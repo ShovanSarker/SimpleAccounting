@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from admin_user_panel.models import AdminUser
 from client_user_panel.models import Client, ClientUser
+from cash.models import Cash
+from bank.models import Bank
 # Create your views here.
 
 
@@ -77,8 +79,13 @@ def home(request):
         client_admin = client_user.Admin
         client_name = client_user.Client.ClientName
         if client_user.Active:
+            client_object = client_user.Client
+            banks = Bank.objects.filter(ClientName=client_object, Active=True)
+            cash = Cash.objects.get(ClientName=client_object)
             display = render(request, 'client_dashboard.html', {'client': client,
                                                                 'client_name': client_name,
+                                                                'banks': banks,
+                                                                'cash': cash,
                                                                 'client_admin': client_admin})
         else:
             logout(request)

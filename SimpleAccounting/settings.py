@@ -42,6 +42,9 @@ INSTALLED_APPS = (
     'ui_engine',
     'admin_user_panel',
     'client_user_panel',
+    'bank',
+    'transaction',
+    'cash',
 )
 
 MIDDLEWARE_CLASSES = (

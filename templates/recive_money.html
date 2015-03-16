@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-8">
+            <h1 class="page-header">Receive Money</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Enter Transaction Info
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form role="form" action="/receive_money/" method="POST">{% csrf_token %}
+                                <fieldset>
+                                    <div class="form-group input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                        <input class="form-control" list="name_suggestion" placeholder="Received From" name="name" type="text"
+                                               autofocus required="">
+                                        <datalist id="name_suggestion">
+                                            <option value="PHP" />
+                                            <option value="C++" />
+                                            <option value="Java" />
+                                            <option value="Ruby" />
+                                            <option value="Python" />
+                                            <option value="Go" />
+                                            <option value="Perl" />
+                                            <option value="Erlang" />
+                                        </datalist>
+                                    </div>
+
+                                    <div class="form-group input-group">
+                                        <span class="input-group-addon"><i class="fa fa-tags"></i></span>
+                                        <input class="form-control" list="purpose_suggestion" placeholder="Purpose" name="purpose" type="text"
+                                               autofocus required="">
+                                        <datalist id="purpose_suggestion">
+                                            <option value="PHP" />
+                                            <option value="C++" />
+                                            <option value="Java" />
+                                            <option value="Ruby" />
+                                            <option value="Python" />
+                                            <option value="Go" />
+                                            <option value="Perl" />
+                                            <option value="Erlang" />
+                                        </datalist>
+                                    </div>
+                                    <div class="form-group input-group">
+                                        <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                                        <input class="form-control" placeholder="Amount" name="amount" type="number"
+                                               autofocus required="">
+                                    </div>
+                                    <label>Payment Type</label><br>
+                                    <div class="form-group input-group">
+                                        <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                        <select class="form-control" name="type">
+                                            <option value="cash">Cash</option>
+                                            <option value="ban1">Bank 1</option>
+                                            <option value="ban2">Bank 2</option>
+                                            <option value="ban3">Bank 3</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Is this a loan :</label>
+                                        <label class="checkbox-inline">
+                                            <input type="checkbox" name="loan">(Please check if it is a loan)
+                                        </label>
+                                    </div>
+                                    <div class="form-group input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                        <input class="form-control" placeholder="Any Further Date for This Transaction" name="next_date" type="date"
+                                               autofocus>
+                                    </div>
+                                    <div class="form-group input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                        <input class="form-control" placeholder="Remarks" name="remarks" type="text"
+                                               autofocus>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary block full-width m-b">Add this Transaction</button>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <!-- /.col-lg-6 (nested) -->
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+
+        <!-- /.row -->
+
+    </div>
+    {% if wrong %}
+    <div class="alert alert-danger alert-dismissable">
+        <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+        <p align="center">{{ text }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

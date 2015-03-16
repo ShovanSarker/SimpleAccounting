@@ -8,41 +8,224 @@
     <!-- /.col-lg-12 -->
 </div>
 
-<div class="panel panel-default">
+<div class="panel panel-info">
     <div class="panel-heading">
-        Pill Tabs
+        <ul class="nav nav-pills">
+            <li class="active"><a data-toggle="tab" href="#status-pills" aria-expanded="true">Current Status</a>
+            </li>
+            <li class=""><a data-toggle="tab" href="#add-new-transaction-pills" aria-expanded="false">New Transaction</a>
+            </li>
+            <li class=""><a data-toggle="tab" href="#all-transactions-pills" aria-expanded="false">All Transactions</a>
+            </li>
+            <li class=""><a data-toggle="tab" href="#money-received-pills" aria-expanded="false">Money Received</a>
+            </li>
+            <li class=""><a data-toggle="tab" href="#money-paid-pills" aria-expanded="false">Money Paid</a>
+            </li>
+            <li class=""><a data-toggle="tab" href="#money-lent-pills" aria-expanded="false">Money I owe</a>
+            </li>
+            <li class=""><a data-toggle="tab" href="#money-borrow-pills" aria-expanded="false">Money Others Owe</a>
+            </li>
+            <li class=""><a data-toggle="tab" href="#list-banks-pills" aria-expanded="false">Banks</a>
+            </li>
+        </ul>
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
         <!-- Nav tabs -->
-        <ul class="nav nav-pills">
-            <li class="active"><a data-toggle="tab" href="#home-pills" aria-expanded="true">Home</a>
-            </li>
-            <li class=""><a data-toggle="tab" href="#profile-pills" aria-expanded="false">Profile</a>
-            </li>
-            <li class=""><a data-toggle="tab" href="#messages-pills" aria-expanded="false">Messages</a>
-            </li>
-            <li class=""><a data-toggle="tab" href="#settings-pills" aria-expanded="false">Settings</a>
-            </li>
-        </ul>
+
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div id="home-pills" class="tab-pane fade active in">
-                <h4>Home Tab</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <div id="status-pills" class="tab-pane fade active in">
+                <h4>Cash in hand</h4>
+                <p> {{cash.Balance}} BDT</p>
+                {% for bank in banks %}
+                <hr>
+                <h4>{{bank.NameOfTheBank}}</h4>
+                <h6>A/C: {{bank.AccountNumber}}</h6>
+                <p>Balance: {{bank.Balance}} BDT</p>
+                {% endfor %}
+
             </div>
-            <div id="profile-pills" class="tab-pane fade">
+            <div id="add-new-transaction-pills" class="tab-pane fade">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#money-receive">Receive Money</a>
+                            </li>
+                            <li><a data-toggle="tab" href="#profile">Profile</a>
+                            </li>
+                            <li><a data-toggle="tab" href="#messages">Messages</a>
+                            </li>
+                            <li><a data-toggle="tab" href="#add_bank_account">Add A Bank Account</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <!-- Nav tabs -->
+
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div id="money-receive" class="tab-pane fade in active">
+                                <form role="form" action="/receive_money/" method="POST">{% csrf_token %}
+                                    <fieldset>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                            <input class="form-control" list="name_suggestion" placeholder="Received From" name="name" type="text"
+                                                   autofocus required="">
+                                            <datalist id="name_suggestion">
+                                                <option value="PHP" />
+                                                <option value="C++" />
+                                                <option value="Java" />
+                                                <option value="Ruby" />
+                                                <option value="Python" />
+                                                <option value="Go" />
+                                                <option value="Perl" />
+                                                <option value="Erlang" />
+                                            </datalist>
+                                        </div>
+
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-tags"></i></span>
+                                            <input class="form-control" list="purpose_suggestion" placeholder="Purpose" name="purpose" type="text"
+                                                   autofocus required="">
+                                            <datalist id="purpose_suggestion">
+                                                <option value="PHP" />
+                                                <option value="C++" />
+                                                <option value="Java" />
+                                                <option value="Ruby" />
+                                                <option value="Python" />
+                                                <option value="Go" />
+                                                <option value="Perl" />
+                                                <option value="Erlang" />
+                                            </datalist>
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                                            <input class="form-control" placeholder="Amount" name="amount" type="number"
+                                                   autofocus required="">
+                                        </div>
+                                        <label>Payment Type</label><br>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                            <select class="form-control" name="type">
+                                                <option value="cash">Cash</option>
+                                                {% for bank in banks %}
+                                                <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Is this a loan :</label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" name="loan">(Please check if it is a loan)
+                                            </label>
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <input class="form-control" placeholder="Any Further Date for This Transaction" name="next_date" type="date"
+                                                   autofocus>
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                            <input class="form-control" placeholder="Remarks" name="remarks" type="text"
+                                                   autofocus>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary block full-width m-b">Add this Transaction</button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                            <div id="profile" class="tab-pane fade">
+                                <h4>Profile Tab</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                            <div id="messages" class="tab-pane fade">
+                                <h4>Messages Tab</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                            <div id="add_bank_account" class="tab-pane fade">
+                                <form role="form" action="/add_a_bank/" method="POST">{% csrf_token %}
+                                    <fieldset>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-bank"></i></span>
+                                            <input class="form-control" placeholder="Name of the Bank" name="bank_name" type="text"
+                                                   autofocus required="">
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa  fa-terminal"></i></span>
+                                            <input class="form-control" placeholder="Account Number" name="bank_account" type="text"
+                                                   autofocus required="">
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                            <input class="form-control" placeholder="Initial Balance" name="bank_balance" type="number"
+                                                   step="any" autofocus required="">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary block full-width m-b">Add this Transaction</button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+            </div>
+
+            <div id="all-transactions-pills" class="tab-pane fade">
                 <h4>Profile Tab</h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
-            <div id="messages-pills" class="tab-pane fade">
+            <div id="money-received-pills" class="tab-pane fade">
                 <h4>Messages Tab</h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
-            <div id="settings-pills" class="tab-pane fade">
+            <div id="money-paid-pills" class="tab-pane fade">
                 <h4>Settings Tab</h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            <div id="money-lent-pills" class="tab-pane fade">
+                <h4>Settings Tab</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            <div id="money-borrow-pills" class="tab-pane fade">
+                <h4>Settings Tab</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            <div id="list-banks-pills" class="tab-pane fade">
+                <h4>List of Bank Accounts</h4>
+                <div class="row">
+                    <div class="col-lg-10 col-md-10 col-sm-10">
+                        <div class="dataTable_wrapper">
+                            <table class="table table-striped table-bordered table-hover uiDataTables" >
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Account No.</th>
+                                    <th>Balance</th>
+                                    <th>Date Added</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for bank in banks %}
+                                <tr>
+                                    <td>{{bank.NameOfTheBank}}</td>
+                                    <td>{{bank.AccountNumber}}</td>
+                                    <td>{{bank.Balance}}</td>
+                                    <td>{{bank.DateAdded}}</td>
+                                    <td>not fixed yet</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+
             </div>
         </div>
     </div>

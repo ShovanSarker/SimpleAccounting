@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from admin_user_panel.models import AdminUser
 from client_user_panel.models import ClientUser, Client
+from cash.models import Cash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -43,7 +44,8 @@ def add_client_info(request):
                     else:
                         if post_data['re-password'] == post_data['password']:
                             new_client = Client(ClientName=client_name,
-                                                Address=client_address)
+                                                Address=client_address,
+                                                )
                             new_client.save()
                             new_client_admin_username = post_data['username']
                             new_client_admin_name = post_data['name']
@@ -62,6 +64,8 @@ def add_client_info(request):
                                                                 new_client_admin_email,
                                                                 new_client_admin_password)
                             new_user.save()
+                            add_cash = Cash(ClientName=new_client, Balance=0.0)
+                            add_cash.save()
                             display = render(request, 'add_client.html',
                                              {'wrong': True,
                                               'text': 'The new user is added successfully',
@@ -175,11 +179,10 @@ def client_user_modification(request):
     return display
 
 
-def transaction(request):
+def receive_money(request):
     if 'user' in request.session:
         user = request.session['user']
-        get_data = request.GET
-        # if admin
+        # if client
         if ClientUser.objects.filter(username__exact=user).exists():
             client_user = ClientUser.objects.get(username__exact=user)
             client = True
@@ -188,29 +191,8 @@ def transaction(request):
             client_object = client_user.Client
             all_users_of_client = ClientUser.objects.filter(Client=client_object)
             if admin_user.Active:
-                username = get_data['username']
-                action = get_data['action']
-                selected_user = ClientUser.objects.get(username__exact=username)
-                if action == '1':
-                    selected_user.Active = True
-                    selected_user.save()
-                elif action == '2':
-                    selected_user.Active = False
-                    selected_user.save()
-                elif action == '3':
-                    selected_user.Admin = True
-                    selected_user.save()
-                elif action == '4':
-                    selected_user.Admin = False
-                    selected_user.save()
-                all_client_users = Client.objects.all()
-
-                display = render(request, 'client_user_list.html',
-                                 {'wrong': True,
-                                  'text': 'Success',
-                                  'all_client_users': all_client_users,
-                                  'all_client': all_users_of_client,
-                                  'client': client,
+                display = render(request, 'recive_money.html',
+                                 {'client': client,
                                   'client_admin': client_admin})
             else:
                 logout(request)

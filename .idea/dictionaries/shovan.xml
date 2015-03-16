@@ -2,6 +2,7 @@
   <dictionary name="shovan">
     <words>
       <w>csrfmiddlewaretoken</w>
+      <w>glyphicon</w>
     </words>
   </dictionary>
 </component>
