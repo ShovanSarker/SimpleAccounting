@@ -75,9 +75,11 @@ def home(request):
         client = True
         client_user = ClientUser.objects.get(username__exact=user)
         client_admin = client_user.Admin
+        client_name = client_user.Client.ClientName
         if client_user.Active:
-            display = render(request, 'dashboard.html', {'client': client,
-                                                         'client_admin': client_admin})
+            display = render(request, 'client_dashboard.html', {'client': client,
+                                                                'client_name': client_name,
+                                                                'client_admin': client_admin})
         else:
             logout(request)
             display = render(request, 'login.html',

@@ -32,8 +32,8 @@
                                 <td>{{client_user.Email}}</td>
                                 <td>{{client_user.Phone}}</td>
                                 <td>{{client_user.username}}</td>
-                                <td>{% if client_user.Admin %} admin<a href="/client_user_modification/?username={{client_user.username}}&action=2">(Demote to normal User)</a>{% else %} non-admin<a href="/client_user_modification/?username={{client_user.username}}&action=1">(Promote to admin User)</a> {% endif %}</td>
-                                <td>{% if client_user.Active %}Active<a href="/client_user_modification/?username={{client_user.username}}&action=4">(Deactivate ?)</a>{% else %} Deactivated <a href="/client_user_modification/?username={{client_user.username}}&action=3">(Activate ?)</a> {% endif %}</td>
+                                <td>{% if client_user.Admin %} admin<a href="/client_user_modification/?username={{client_user.username}}&action=4">(Demote to normal User)</a>{% else %} non-admin<a href="/client_user_modification/?username={{client_user.username}}&action=3">(Promote to admin User)</a> {% endif %}</td>
+                                <td>{% if client_user.Active %}Active<a href="/client_user_modification/?username={{client_user.username}}&action=2">(Deactivate ?)</a>{% else %} Deactivated <a href="/client_user_modification/?username={{client_user.username}}&action=1">(Activate ?)</a> {% endif %}</td>
                                 <td>{{client_user.DateAdded}}</td>
                                 <td>not fixed yet</td>
                             </tr>
