@@ -177,33 +177,3 @@ def client_user_modification(request):
     else:
         display = redirect('/login')
     return display
-
-
-def receive_money(request):
-    if 'user' in request.session:
-        user = request.session['user']
-        # if client
-        if ClientUser.objects.filter(username__exact=user).exists():
-            client_user = ClientUser.objects.get(username__exact=user)
-            client = True
-            client_admin = client_user.Admin
-            admin_user = ClientUser.objects.get(username__exact=user)
-            client_object = client_user.Client
-            all_users_of_client = ClientUser.objects.filter(Client=client_object)
-            if admin_user.Active:
-                display = render(request, 'recive_money.html',
-                                 {'client': client,
-                                  'client_admin': client_admin})
-            else:
-                logout(request)
-                display = render(request, 'login.html',
-                                 {'wrong': True,
-                                  'text': 'You are not authorized to login.'
-                                          ' Please contact administrator for more details'})
-        else:
-            display = redirect('/')
-    else:
-        display = redirect('/login')
-    return display
-
-

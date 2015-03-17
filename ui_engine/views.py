@@ -3,9 +3,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from admin_user_panel.models import AdminUser
-from client_user_panel.models import Client, ClientUser
+from client_user_panel.models import Client, ClientUser, ClientUserSuggestionNames, ClientUserSuggestionPurpose
 from cash.models import Cash
 from bank.models import Bank
+from transaction.models import Transaction, BorrowedTransaction, LentTransaction
 # Create your views here.
 
 
@@ -82,10 +83,28 @@ def home(request):
             client_object = client_user.Client
             banks = Bank.objects.filter(ClientName=client_object, Active=True)
             cash = Cash.objects.get(ClientName=client_object)
+            suggestion_name = ClientUserSuggestionNames.objects.filter(Client=client_object)
+            suggestion_purpose = ClientUserSuggestionPurpose.objects.filter(Client=client_object)
+            list_transaction = Transaction.objects.filter(Client=client_object)
+            received_transaction = Transaction.objects.filter(Client=client_object, Received=True)
+            paid_transaction = Transaction.objects.filter(Client=client_object, Received=False)
+            borrowed_transaction = BorrowedTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=False)
+            borrowed_transaction_paid = BorrowedTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=True)
+            lent_transaction = LentTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=False)
+            lent_transaction_paid = LentTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=True)
             display = render(request, 'client_dashboard.html', {'client': client,
                                                                 'client_name': client_name,
                                                                 'banks': banks,
                                                                 'cash': cash,
+                                                                'list_transaction': list_transaction,
+                                                                'received_transaction': received_transaction,
+                                                                'paid_transaction': paid_transaction,
+                                                                'suggestion_name': suggestion_name,
+                                                                'suggestion_purpose': suggestion_purpose,
+                                                                'borrowed_transaction': borrowed_transaction,
+                                                                'borrowed_transaction_paid': borrowed_transaction_paid,
+                                                                'lent_transaction': lent_transaction,
+                                                                'lent_transaction_paid': lent_transaction_paid,
                                                                 'client_admin': client_admin})
         else:
             logout(request)

@@ -2,7 +2,8 @@ from django.conf.urls import patterns, include, url
 from ui_engine.views import login_page, login_auth, home, logout_now, add_admin, add_client, \
     admin_list, client_list, client_users_list
 from admin_user_panel.views import add_admin_info, admin_modification
-from client_user_panel.views import add_client_info, client_modification, client_user_modification, receive_money
+from client_user_panel.views import add_client_info, client_modification, client_user_modification
+from transaction.views import receive_money, pay_money, pay_due_money, rec_due_money
 from bank.views import add_a_bank
 from django.conf.urls.static import static
 from django.conf import settings
@@ -27,6 +28,9 @@ urlpatterns = patterns('',
                        url(r'^client_users_list/', view=client_users_list, name='home'),
                        url(r'^client_user_modification/', view=client_user_modification, name='home'),
                        url(r'^receive_money/', view=receive_money, name='home'),
+                       url(r'^pay_money/', view=pay_money, name='home'),
+                       url(r'^pay_due_money/', view=pay_due_money, name='home'),
+                       url(r'^rec_due_money/', view=rec_due_money, name='home'),
                        url(r'^add_a_bank/', view=add_a_bank, name='home'),
                        )
 

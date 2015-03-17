@@ -14,7 +14,28 @@ class Transaction(models.Model):
     Type = models.CharField(max_length=124, null=True, blank=True)
     Bank = models.ForeignKey(Bank, related_name='theBankID', null=True, blank=True)
     Remarks = models.CharField(max_length=124, null=True, blank=True)
+    Received = models.BooleanField(default=True)
     DateAdded = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __unicode__(self):
         return self.Client
+
+
+class BorrowedTransaction(models.Model):
+    transaction = models.ForeignKey(Transaction, related_name='theTransactionWith')
+    NextDate = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    Paid = models.BooleanField(default=False)
+    DateAdded = models.DateTimeField(auto_now=True, auto_now_add=False)
+
+    def __unicode__(self):
+        return self.transaction
+
+
+class LentTransaction(models.Model):
+    transaction = models.ForeignKey(Transaction, related_name='theTransactionWithLent')
+    NextDate = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    Paid = models.BooleanField(default=False)
+    DateAdded = models.DateTimeField(auto_now=True, auto_now_add=False)
+
+    def __unicode__(self):
+        return self.transaction

@@ -41,7 +41,7 @@ class ClientUserSuggestionNames(models.Model):
 
 class ClientUserSuggestionPurpose(models.Model):
     Client = models.ForeignKey(Client, related_name='ClientPurposeSuggestion')
-    ClientNameSuggestion = models.CharField(max_length=24, null=True, blank=True)
+    ClientPurposeSuggestion = models.CharField(max_length=24, null=True, blank=True)
     DateAdded = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __unicode__(self):
