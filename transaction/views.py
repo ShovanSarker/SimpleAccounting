@@ -286,3 +286,59 @@ def rec_due_money(request):
     else:
         display = redirect('/login')
     return display
+
+
+def transfer_money(request):
+    if 'user' in request.session:
+        user = request.session['user']
+        print(request.GET)
+        # if client
+        if ClientUser.objects.filter(username__exact=user).exists():
+            client_user = ClientUser.objects.get(username__exact=user)
+            client_object = client_user.Client
+            if client_user.Active:
+                post_data = request.POST
+                transfer_from = post_data['from']
+                transfer_to = post_data['to']
+                transfer_amount = float(post_data['amount'])
+                if transfer_from == 'cash':
+                    transfer_from_object = Cash.objects.get(ClientName=client_object)
+                    from_name = transfer_from
+                else:
+                    transfer_from_object = Bank.objects.get(id=transfer_from)
+                    from_name = transfer_from_object.NameOfTheBank
+
+                if transfer_to == 'cash':
+                    transfer_to_object = Cash.objects.get(ClientName=client_object)
+                    to_name = transfer_to
+                else:
+                    transfer_to_object = Bank.objects.get(id=transfer_to)
+                    to_name = transfer_to_object.NameOfTheBank
+                if not transfer_amount > transfer_from_object.Balance:
+                    transfer_from_object.Balance -= transfer_amount
+                    transfer_to_object.Balance += transfer_amount
+                    transfer_to_object.save()
+
+                    transfer_from_object.save()
+                    new_transaction = Transaction(Client=client_object,
+                                                  Purpose='',
+                                                  TransactionWith='Internal Transaction',
+                                                  Amount=transfer_amount,
+                                                  Type=from_name + ' to ' + to_name,
+                                                  Received=True,
+                                                  EntryBy=client_user)
+                    new_transaction.save()
+                else:
+                    text = 'insufficient balance'
+                display = redirect('/')
+            else:
+                logout(request)
+                display = render(request, 'login.html',
+                                 {'wrong': True,
+                                  'text': 'You are not authorized to login.'
+                                          ' Please contact administrator for more details'})
+        else:
+            display = redirect('/')
+    else:
+        display = redirect('/login')
+    return display

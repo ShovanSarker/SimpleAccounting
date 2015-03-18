@@ -55,7 +55,7 @@
                             </li>
                             <li><a data-toggle="tab" href="#money-pay">Pay Money</a>
                             </li>
-                            <li><a data-toggle="tab" href="#messages">Messages</a>
+                            <li><a data-toggle="tab" href="#balance-transfer">Balance Transfer</a>
                             </li>
                             <li><a data-toggle="tab" href="#add_bank_account">Add A Bank Account</a>
                             </li>
@@ -183,9 +183,38 @@
                                     </fieldset>
                                 </form>
                             </div>
-                            <div id="messages" class="tab-pane fade">
-                                <h4>Messages Tab</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <div id="balance-transfer" class="tab-pane fade">
+                                <h4>Transfer Your Balance</h4>
+                                <form role="form" action="/transfer_money/" method="POST">{% csrf_token %}
+                                    <fieldset>
+                                        <label>Send From</label><br>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                            <select class="form-control" name="from">
+                                                <option value="cash">Cash-Balance:{{cash.Balance}}BDT</option>
+                                                {% for bank in banks %}
+                                                <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})-Balance:{{bank.Balance}} BDT</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-usd"></i></span>
+                                            <input class="form-control" placeholder="Amount" name="amount" type="number"
+                                                   autofocus  step="any" required="">
+                                        </div>
+                                        <label>Send To</label><br>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                            <select class="form-control" name="to">
+                                                <option value="cash">Cash</option>
+                                                {% for bank in banks %}
+                                                <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary block full-width m-b">Add this Transaction</button>
+                                    </fieldset>
+                                </form>
                             </div>
                             <div id="add_bank_account" class="tab-pane fade">
                                 <form role="form" action="/add_a_bank/" method="POST">{% csrf_token %}
