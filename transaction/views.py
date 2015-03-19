@@ -183,7 +183,7 @@ def pay_due_money(request):
                 transaction_amount = transaction_object.transaction.Amount
                 if post_data['type'] == 'cash':
                     balance = Cash.objects.get(ClientName=client_object).Balance
-                    if balance > transaction_amount:
+                    if balance >= transaction_amount:
                         transaction_object.Paid = True
                         transaction_object.save()
                         new_transaction = Transaction(Client=client_object,
@@ -201,7 +201,7 @@ def pay_due_money(request):
                         text = 'insufficient balance'
                 else:
                     balance = Bank.objects.get(id=post_data['type']).Balance
-                    if balance > transaction_amount:
+                    if balance >= transaction_amount:
                         transaction_object.Paid = True
                         transaction_object.save()
                         new_transaction = Transaction(Client=client_object,

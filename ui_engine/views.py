@@ -7,6 +7,7 @@ from client_user_panel.models import Client, ClientUser, ClientUserSuggestionNam
 from cash.models import Cash
 from bank.models import Bank
 from transaction.models import Transaction, BorrowedTransaction, LentTransaction
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
 
@@ -55,6 +56,7 @@ def logout_now(request):
 
 @login_required(login_url='/login/')
 def home(request):
+    page_title = '|Home|'
     user = request.session['user']
     if not AdminUser.objects.exists():
         print(request.session['user'])
@@ -67,6 +69,7 @@ def home(request):
         admin_admin = admin_user.Admin
         if admin_user.Active:
             display = render(request, 'dashboard.html', {'admin': admin,
+                                                         'page_title': page_title,
                                                          'admin_admin': admin_admin})
         else:
             logout(request)
@@ -85,17 +88,34 @@ def home(request):
             cash = Cash.objects.get(ClientName=client_object)
             suggestion_name = ClientUserSuggestionNames.objects.filter(Client=client_object)
             suggestion_purpose = ClientUserSuggestionPurpose.objects.filter(Client=client_object)
+
+            # list_transaction_list = Transaction.objects.filter(Client=client_object)
+            # paginator = Paginator(list_transaction_list, 10)
+            # page = request.GET.get('page')
+            # try:
+            #     list_transaction = paginator.page(page)
+            # except PageNotAnInteger:
+            #     # If page is not an integer, deliver first page.
+            #     list_transaction = paginator.page(1)
+            # except EmptyPage:
+            #     # If page is out of range (e.g. 9999), deliver last page of results.
+            #     list_transaction = paginator.page(paginator.num_pages)
             list_transaction = Transaction.objects.filter(Client=client_object)
+
             received_transaction = Transaction.objects.filter(Client=client_object, Received=True)
             paid_transaction = Transaction.objects.filter(Client=client_object, Received=False)
             borrowed_transaction = BorrowedTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=False)
             borrowed_transaction_paid = BorrowedTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=True)
             lent_transaction = LentTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=False)
             lent_transaction_paid = LentTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=True)
+
+
+
             display = render(request, 'client_dashboard.html', {'client': client,
                                                                 'client_name': client_name,
                                                                 'banks': banks,
                                                                 'cash': cash,
+                                                                'page_title': page_title,
                                                                 'list_transaction': list_transaction,
                                                                 'received_transaction': received_transaction,
                                                                 'paid_transaction': paid_transaction,
@@ -163,9 +183,11 @@ def add_client(request):
         if admin_user.Active:
             if admin_admin:
                 display = render(request, 'add_client.html', {'admin': admin,
+                                                              'page_title': '|Add A Client|',
                                                               'admin_admin': admin_admin})
             else:
                 display = render(request, 'access_denied.html', {'admin': admin,
+                                                                 'page_title': '|Access Denied|',
                                                                  'admin_admin': admin_admin})
         else:
             logout(request)
@@ -190,6 +212,7 @@ def admin_list(request):
             display = render(request, 'admin_list.html',
                              {'admin': admin,
                               'admin_admin': admin_admin,
+                              'page_title': '|List Of Admins|',
                               'all_admin_users': all_admin_users})
         else:
             logout(request)
@@ -215,6 +238,7 @@ def client_list(request):
             display = render(request, 'client_list.html',
                              {'admin': admin,
                               'all_client_users': all_client_users,
+                              'page_title': '|List Of Clients|',
                               'admin_admin': admin_admin})
         else:
             logout(request)
@@ -240,7 +264,35 @@ def client_users_list(request):
         if client_user.Active:
             display = render(request, 'client_user_list.html', {'all_client': all_users_of_client,
                                                                 'client': client,
+                                                                'page_title': '|Client User List|',
                                                                 'client_admin': client_admin})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    else:
+        display = render(request, 'access_denied.html',
+                         {'wrong': True,
+                          'text': 'Something went wrong. Please LOGIN again.'})
+    return display
+
+
+@login_required(login_url='/login/')
+def add_new_client_user(request):
+    user = request.session['user']
+    # if client
+    if ClientUser.objects.filter(username__exact=user).exists():
+        client = True
+        client_user = ClientUser.objects.get(username__exact=user)
+        client_admin = client_user.Admin
+        client_object = client_user.Client
+        all_users_of_client = ClientUser.objects.filter(Client=client_object)
+        if client_user.Active and client_user.Admin:
+            display = render(request, 'add_new_client_user.html', {'all_client': all_users_of_client,
+                                                                   'client': client,
+                                                                   'page_title': '|Add A New User|',
+                                                                   'client_admin': client_admin})
         else:
             logout(request)
             display = render(request, 'login.html',
