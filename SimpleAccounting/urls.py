@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 from ui_engine.views import login_page, login_auth, home, logout_now, add_admin, add_client, \
-    admin_list, client_list, client_users_list, add_new_client_user
+    admin_list, client_list, client_users_list, add_new_client_user, transaction_by_date
 from admin_user_panel.views import add_admin_info, admin_modification
 from client_user_panel.views import add_client_info, client_modification, \
     client_user_modification, add_client_user_info
@@ -36,6 +36,7 @@ urlpatterns = patterns('',
                        url(r'^transfer_money/', view=transfer_money, name='home'),
                        url(r'^add_new_client_user/', view=add_new_client_user, name='home'),
                        url(r'^add_client_user_info/', view=add_client_user_info, name='home'),
+                       url(r'^transaction_by_date/', view=transaction_by_date, name='home'),
                        )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

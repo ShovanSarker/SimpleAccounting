@@ -108,9 +108,12 @@ def home(request):
             borrowed_transaction_paid = BorrowedTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=True)
             lent_transaction = LentTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=False)
             lent_transaction_paid = LentTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=True)
-
-
-
+            if 'err' in request.GET and request.GET['err'] == '1':
+                wrn = True
+                text = 'Insufficient Balance'
+            else:
+                wrn = False
+                text = ''
             display = render(request, 'client_dashboard.html', {'client': client,
                                                                 'client_name': client_name,
                                                                 'banks': banks,
@@ -125,6 +128,8 @@ def home(request):
                                                                 'borrowed_transaction_paid': borrowed_transaction_paid,
                                                                 'lent_transaction': lent_transaction,
                                                                 'lent_transaction_paid': lent_transaction_paid,
+                                                                'wrn': wrn,
+                                                                'text': text,
                                                                 'client_admin': client_admin})
         else:
             logout(request)
@@ -293,6 +298,44 @@ def add_new_client_user(request):
                                                                    'client': client,
                                                                    'page_title': '|Add A New User|',
                                                                    'client_admin': client_admin})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    else:
+        display = render(request, 'access_denied.html',
+                         {'wrong': True,
+                          'text': 'Something went wrong. Please LOGIN again.'})
+    return display
+
+
+@login_required(login_url='/login/')
+def transaction_by_date(request):
+    user = request.session['user']
+    # if client
+    if ClientUser.objects.filter(username__exact=user).exists():
+        client = True
+        client_user = ClientUser.objects.get(username__exact=user)
+        client_admin = client_user.Admin
+        client_object = client_user.Client
+        all_users_of_client = ClientUser.objects.filter(Client=client_object)
+        if client_user.Active and client_user.Admin:
+            if 'start_date' in request.POST and 'stop_date' in request.POST:
+                start_date = request.POST['start_date']
+                stop_date = request.POST['stop_date']
+                trans = Transaction.objects.filter(DateAdded__range=[start_date, stop_date], Client=client_object)
+                display = render(request, 'transaction_by_date.html', {'all_client': all_users_of_client,
+                                                                       'client': client,
+                                                                       'page_title': '|Add A New User|',
+                                                                       'trans': trans,
+                                                                       'selected': True,
+                                                                       'client_admin': client_admin})
+            else:
+                display = render(request, 'transaction_by_date.html', {'all_client': all_users_of_client,
+                                                                       'client': client,
+                                                                       'page_title': '|Add A New User|',
+                                                                       'client_admin': client_admin})
         else:
             logout(request)
             display = render(request, 'login.html',
