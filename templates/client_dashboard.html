@@ -70,11 +70,12 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div id="money-receive" class="tab-pane fade in active">
-                                <form role="form" action="/receive_money/" method="POST">{% csrf_token %}
+                                <!--<form role="form" action="/receive_money/" method="POST">{% csrf_token %}-->
+                                <form role="form" action="" method="POST">{% csrf_token %}
                                     <fieldset>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                            <input class="form-control" list="name_suggestion" placeholder="Received From" name="name" type="text"
+                                            <input class="form-control" list="name_suggestion" placeholder="Received From" name="name" id="rcvFrmName" type="text"
                                                    autofocus autocomplete="off" required="">
                                             <datalist id="name_suggestion">
                                                 {% for name in suggestion_name %}
@@ -85,7 +86,7 @@
 
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-tags"></i></span>
-                                            <input class="form-control" list="purpose_suggestion" placeholder="Purpose" name="purpose" type="text"
+                                            <input class="form-control" list="purpose_suggestion" placeholder="Purpose" id="rcvFrmPurpose" name="purpose" type="text"
                                                    autofocus autocomplete="off" required="">
                                             <datalist id="purpose_suggestion">
                                                 {% for purpose in suggestion_purpose %}
@@ -95,13 +96,13 @@
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-usd"></i></span>
-                                            <input class="form-control" placeholder="Amount" name="amount" type="number"
+                                            <input class="form-control" placeholder="Amount" id="rcvFrmAmount" name="amount" type="number"
                                                    autofocus  step="any" required="">
                                         </div>
                                         <label>Payment Type</label><br>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-money"></i></span>
-                                            <select class="form-control" name="type">
+                                            <select class="form-control" id="rcvFrmType" name="type">
                                                 <option value="cash">Cash</option>
                                                 {% for bank in banks %}
                                                 <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})</option>
@@ -111,20 +112,20 @@
                                         <div class="form-group">
                                             <label>Is this a loan :</label>
                                             <label class="checkbox-inline">
-                                                <input type="checkbox" name="loan">(Please check if it is a loan)
+                                                <input type="checkbox" id="rcvFrmLoan" name="loan">(Please check if it is a loan)
                                             </label>
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                            <input class="form-control" placeholder="Any Further Date for This Transaction" name="next_date" type="date"
+                                            <input class="form-control" placeholder="Any Further Date for This Transaction" id="rcvFrmNextDate" name="next_date" type="date"
                                                    autofocus>
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-                                            <input class="form-control" placeholder="Remarks" name="remarks" type="text"
+                                            <input class="form-control" placeholder="Remarks" id="rcvFrmRemarks" name="remarks" type="text"
                                                    autofocus>
                                         </div>
-                                        <button type="submit" class="btn btn-primary block full-width m-b">Add this Transaction</button>
+                                        <button type="submit" class="btn btn-primary block full-width m-b" id="btnReciveMoney">Add this Transaction</button>
                                     </fieldset>
                                 </form>
                             </div>
@@ -238,7 +239,7 @@
                                             <input class="form-control" placeholder="Initial Balance" name="bank_balance" type="number"
                                                    step="any" autofocus required="">
                                         </div>
-                                        <button type="submit" class="btn btn-primary block full-width m-b">Add this Transaction</button>
+                                        <button type="submit" class="btn btn-primary block full-width m-b" id="rcv_money">Add this Transaction</button>
                                     </fieldset>
                                 </form>
                             </div>
@@ -589,6 +590,27 @@
     <!-- /.panel-body -->
 </div>
 <!-- /.panel -->
+
+<!-- Large modal -->
+<!--<button type="button" class="btn btn-primary" id="btnReciveMoney">Large modal</button>-->
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalRecieveMoney">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
 {% if wrn %}
 <div class="alert alert-danger alert-dismissable">
     <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
