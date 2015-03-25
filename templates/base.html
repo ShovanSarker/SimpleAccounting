@@ -29,7 +29,8 @@
 
     <!-- Custom Fonts -->
     <link href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
-
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -132,7 +133,18 @@
 <!--<script src="{% static 'bower_components/datatables/media/js/jquery.dataTables.js' %}"></script>-->
 <!--<script src="{% static 'bower_components/datatables-plugins/pagination/jPaginator/dataTables.jPaginator.js' %}"></script>-->
 <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
-
+<!-- jQuery -->
+<!--<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>-->
+<script type="text/javascript">
+    $(document).ready( function () {
+//        $('#table_id').DataTable();
+        $('.dt-page').DataTable( {
+            paging: true
+        } );
+    } );
+</script>
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 

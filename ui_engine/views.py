@@ -7,6 +7,7 @@ from client_user_panel.models import Client, ClientUser, ClientUserSuggestionNam
 from cash.models import Cash
 from bank.models import Bank
 from transaction.models import Transaction, BorrowedTransaction, LentTransaction
+from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
@@ -324,12 +325,14 @@ def transaction_by_date(request):
             if 'start_date' in request.POST and 'stop_date' in request.POST:
                 start_date = request.POST['start_date']
                 stop_date = request.POST['stop_date']
+                timeframe = start_date + ' and ' + stop_date
                 trans = Transaction.objects.filter(DateAdded__range=[start_date, stop_date], Client=client_object)
                 display = render(request, 'transaction_by_date.html', {'all_client': all_users_of_client,
                                                                        'client': client,
-                                                                       'page_title': '|Add A New User|',
+                                                                       'page_title': 'Transactions',
                                                                        'trans': trans,
                                                                        'selected': True,
+                                                                       'timeframe': timeframe,
                                                                        'client_admin': client_admin})
             else:
                 display = render(request, 'transaction_by_date.html', {'all_client': all_users_of_client,

@@ -70,8 +70,8 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div id="money-receive" class="tab-pane fade in active">
-                                <!--<form role="form" action="/receive_money/" method="POST">{% csrf_token %}-->
-                                <form role="form" action="" method="POST">{% csrf_token %}
+                                <form role="form" action="/receive_money/" method="POST" id="formRevieveMoney">{% csrf_token %}
+                                    <!--<form role="form" action="" method="POST">{% csrf_token %}-->
                                     <fieldset>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
@@ -130,11 +130,11 @@
                                 </form>
                             </div>
                             <div id="money-pay" class="tab-pane fade">
-                                <form role="form" action="/pay_money/" method="POST">{% csrf_token %}
+                                <form role="form" action="/pay_money/" method="POST" id="formPayMoney">{% csrf_token %}
                                     <fieldset>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                            <input class="form-control" list="name_suggestion" placeholder="Paid to" name="name" type="text"
+                                            <input class="form-control" list="name_suggestion" placeholder="Paid to" id="payFrmName" name="name" type="text"
                                                    autofocus autocomplete="off" required="">
                                             <datalist id="name_suggestion">
                                                 {% for name in suggestion_name %}
@@ -145,7 +145,7 @@
 
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-tags"></i></span>
-                                            <input class="form-control" list="purpose_suggestion" placeholder="Purpose" name="purpose" type="text"
+                                            <input class="form-control" list="purpose_suggestion" placeholder="Purpose" id="payFrmPurpose" name="purpose" type="text"
                                                    autofocus autocomplete="off" required="">
                                             <datalist id="purpose_suggestion">
                                                 {% for purpose in suggestion_purpose %}
@@ -155,13 +155,13 @@
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-usd"></i></span>
-                                            <input class="form-control" placeholder="Amount" name="amount" type="number"
+                                            <input class="form-control" placeholder="Amount" name="amount" type="number" id="payFrmAmount"
                                                    autofocus  step="any" required="">
                                         </div>
                                         <label>Payment Type</label><br>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-money"></i></span>
-                                            <select class="form-control" name="type">
+                                            <select class="form-control" name="type" id="payFrmType">
                                                 <option value="cash">Cash</option>
                                                 {% for bank in banks %}
                                                 <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})</option>
@@ -171,20 +171,20 @@
                                         <div class="form-group">
                                             <label>Is this a loan :</label>
                                             <label class="checkbox-inline">
-                                                <input type="checkbox" name="loan">(Please check if it is a loan)
+                                                <input type="checkbox" name="loan" id="payFrmLoan">(Please check if it is a loan)
                                             </label>
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                            <input class="form-control" placeholder="Any Further Date for This Transaction" name="next_date" type="date"
+                                            <input class="form-control" placeholder="Any Further Date for This Transaction" name="next_date" id="payFrmNextDate" type="date"
                                                    autofocus>
                                         </div>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-                                            <input class="form-control" placeholder="Remarks" name="remarks" type="text"
+                                            <input class="form-control" placeholder="Remarks" name="remarks" id="payFrmRemarks" type="text"
                                                    autofocus>
                                         </div>
-                                        <button type="submit" class="btn btn-primary block full-width m-b">Add this Transaction</button>
+                                        <button type="submit" class="btn btn-primary block full-width m-b" id="btnPayMoney">Add this Transaction</button>
                                     </fieldset>
                                 </form>
                             </div>
@@ -269,9 +269,10 @@
                                 <div class="col-lg-10 col-md-10 col-sm-10">
                                     <div class="dataTable_wrapper">
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover uiDataTables" >
+                                            <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
                                                 <thead>
                                                 <tr>
+                                                    <th>No.</th>
                                                     <th>Transaction With</th>
                                                     <th>Purpose</th>
                                                     <th>Transaction Type</th>
@@ -286,6 +287,7 @@
                                                 <tbody>
                                                 {% for transaction in list_transaction %}
                                                 <tr>
+                                                    <td></td>
                                                     <td>{{transaction.TransactionWith}}</td>
                                                     <td>{{transaction.Purpose}}</td>
                                                     <td>{% if transaction.Received %} Received {% else %} Paid {% endif %}</td>
@@ -297,30 +299,9 @@
                                                     <td>{{transaction.DateAdded}}</td>
                                                 </tr>
                                                 {% endfor %}
-                                                <!--<div class="pagination">-->
-                                                <!--<span class="step-links">-->
-                                                <!--{% if list_transaction.has_previous %}-->
-                                                <!--<a href="?page={{ list_transaction.previous_page_number }}">previous</a>-->
-                                                <!--{% endif %}-->
-
-                                                <!--<span class="current">-->
-                                                <!--Page {{ list_transaction.number }} of {{ list_transaction.paginator.num_pages }}.-->
-                                                <!--</span>-->
-
-                                                <!--{% if list_transaction.has_next %}-->
-                                                <!--<a href="?page={{ list_transaction.next_page_number }}">next</a>-->
-                                                <!--{% endif %}-->
-                                                <!--</span>-->
-                                                <!--</div>-->
                                                 </tbody>
-                                                <!--<tfoot class="hide-if-no-paging">-->
-                                                <!--<tr>-->
-                                                <!--<td colspan="5">-->
-                                                <!--<div class="pagination pagination-centered"></div>-->
-                                                <!--</td>-->
-                                                <!--</tr>-->
-                                                <!--</tfoot>-->
                                             </table>
+
                                         </div>
                                     </div>
                                 </div>
@@ -332,20 +313,14 @@
                     </div>
                     <!-- /.panel-body -->
                 </div>
-
-
-
-
-
-
-
             </div>
             <div id="money-received-pills" class="tab-pane fade">
                 <h4>List of All Receive Transaction</h4>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <div class="dataTable_wrapper">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover uiDataTables" >
+                            <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
+                                <!--<table class="table table-striped table-bordered table-hover uiDataTables paginated-table" >-->
                                 <thead>
                                 <tr>
                                     <th>Transaction With</th>
@@ -383,7 +358,7 @@
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <div class="dataTable_wrapper">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover uiDataTables" id="example" >
+                            <table class="table table-striped table-bordered table-hover uiDataTables dt-page">
                                 <thead>
                                 <tr>
                                     <th>Transaction With</th>
@@ -411,6 +386,7 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+
                         </div>
                     </div>
                 </div>
@@ -421,7 +397,7 @@
                     <div class="col-lg-10 col-md-10 col-sm-10">
                         <div class="dataTable_wrapper">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover uiDataTables" >
+                                <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
                                     <thead>
                                     <tr>
                                         <th>Transaction With</th>
@@ -445,6 +421,7 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -454,7 +431,7 @@
                     <div class="col-lg-10 col-md-10 col-sm-10">
                         <div class="dataTable_wrapper">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover uiDataTables" >
+                                <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
                                     <thead>
                                     <tr>
                                         <th>Transaction With</th>
@@ -476,6 +453,7 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -487,7 +465,7 @@
                     <div class="col-lg-10 col-md-10 col-sm-10">
                         <div class="dataTable_wrapper">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover uiDataTables" >
+                                <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
                                     <thead>
                                     <tr>
                                         <th>Transaction With</th>
@@ -511,6 +489,7 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -520,7 +499,7 @@
                     <div class="col-lg-10 col-md-10 col-sm-10">
                         <div class="dataTable_wrapper">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover uiDataTables" >
+                                <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
                                     <thead>
                                     <tr>
                                         <th>Transaction With</th>
@@ -542,6 +521,7 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -595,20 +575,25 @@
 <!--<button type="button" class="btn btn-primary" id="btnReciveMoney">Large modal</button>-->
 
 <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalRecieveMoney">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <div class="modal-header">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirm
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modalSubmitBtn">
 
-        </div>
-        <div class="modal-body">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12"></div>
                 </div>
             </div>
         </div>
     </div>
-  </div>
 </div>
 
 {% if wrn %}
