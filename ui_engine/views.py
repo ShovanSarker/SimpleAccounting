@@ -294,11 +294,17 @@ def add_new_client_user(request):
         client_admin = client_user.Admin
         client_object = client_user.Client
         all_users_of_client = ClientUser.objects.filter(Client=client_object)
-        if client_user.Active and client_user.Admin:
-            display = render(request, 'add_new_client_user.html', {'all_client': all_users_of_client,
-                                                                   'client': client,
-                                                                   'page_title': '|Add A New User|',
-                                                                   'client_admin': client_admin})
+        if client_user.Active:
+            if client_user.Admin:
+                display = render(request, 'add_new_client_user.html', {'all_client': all_users_of_client,
+                                                                       'client': client,
+                                                                       'page_title': '|Add A New User|',
+                                                                       'client_admin': client_admin})
+            else:
+                display = render(request, 'access_denied.html', {'all_client': all_users_of_client,
+                                                                 'client': client,
+                                                                 'page_title': '|Add A New User|',
+                                                                 'client_admin': client_admin})
         else:
             logout(request)
             display = render(request, 'login.html',
@@ -321,7 +327,7 @@ def transaction_by_date(request):
         client_admin = client_user.Admin
         client_object = client_user.Client
         all_users_of_client = ClientUser.objects.filter(Client=client_object)
-        if client_user.Active and client_user.Admin:
+        if client_user.Active:
             if 'start_date' in request.POST and 'stop_date' in request.POST:
                 start_date = request.POST['start_date']
                 stop_date = request.POST['stop_date']

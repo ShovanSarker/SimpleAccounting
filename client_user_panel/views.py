@@ -189,45 +189,51 @@ def add_client_user_info(request):
         client_admin = client_user.Admin
         client_object = client_user.Client
         all_users_of_client = ClientUser.objects.filter(Client=client_object)
-        if client_user.Active and client_user.Admin:
-            post_data = request.POST
-            new_client_admin_username = post_data['username']
-            new_client_admin_name = post_data['name']
-            new_client_admin_phone = post_data['phone']
-            new_client_admin_email = post_data['email']
-            new_client_admin_super_admin = False
-            new_client_admin_password = post_data['password']
-            if AdminUser.objects.filter(username__exact=post_data['username']).exists() or \
-                    ClientUser.objects.filter(username__exact=post_data['username']).exists():
-                display = render(request, 'add_new_client_user.html',
-                                 {'wrong': True,
-                                  'text': 'Username already taken. Please try with a different username.',
-                                  'client': client,
-                                  'client_admin': client_admin})
-            else:
-                if post_data['re-password'] == post_data['password']:
-                    new_client_admin_admin = ClientUser(Client=client_object,
-                                                        username=new_client_admin_username,
-                                                        Name=new_client_admin_name,
-                                                        Email=new_client_admin_email,
-                                                        Admin=new_client_admin_super_admin,
-                                                        Phone=new_client_admin_phone)
-                    new_client_admin_admin.save()
-                    new_user = User.objects.create_user(new_client_admin_username,
-                                                        new_client_admin_email,
-                                                        new_client_admin_password)
-                    new_user.save()
+        if client_user.Active:
+            if client_user.Admin:
+                post_data = request.POST
+                new_client_admin_username = post_data['username']
+                new_client_admin_name = post_data['name']
+                new_client_admin_phone = post_data['phone']
+                new_client_admin_email = post_data['email']
+                new_client_admin_super_admin = False
+                new_client_admin_password = post_data['password']
+                if AdminUser.objects.filter(username__exact=post_data['username']).exists() or \
+                        ClientUser.objects.filter(username__exact=post_data['username']).exists():
                     display = render(request, 'add_new_client_user.html',
                                      {'wrong': True,
-                                      'text': 'The new user is added successfully',
+                                      'text': 'Username already taken. Please try with a different username.',
                                       'client': client,
                                       'client_admin': client_admin})
                 else:
-                    display = render(request, 'add_new_client_user.html',
-                                     {'wrong': True,
-                                      'text': 'Passwords do not match. Please Try Again.',
-                                      'client': client,
-                                      'client_admin': client_admin})
+                    if post_data['re-password'] == post_data['password']:
+                        new_client_admin_admin = ClientUser(Client=client_object,
+                                                            username=new_client_admin_username,
+                                                            Name=new_client_admin_name,
+                                                            Email=new_client_admin_email,
+                                                            Admin=new_client_admin_super_admin,
+                                                            Active=True,
+                                                            Phone=new_client_admin_phone)
+                        new_client_admin_admin.save()
+                        new_user = User.objects.create_user(new_client_admin_username,
+                                                            new_client_admin_email,
+                                                            new_client_admin_password)
+                        new_user.save()
+                        display = render(request, 'add_new_client_user.html',
+                                         {'wrong': True,
+                                          'text': 'The new user is added successfully',
+                                          'client': client,
+                                          'client_admin': client_admin})
+                    else:
+                        display = render(request, 'add_new_client_user.html',
+                                         {'wrong': True,
+                                          'text': 'Passwords do not match. Please Try Again.',
+                                          'client': client,
+                                          'client_admin': client_admin})
+            else:
+                display = render(request, 'access_denied.html',
+                                 {'client': client,
+                                  'client_admin': client_admin})
         else:
             logout(request)
             display = render(request, 'login.html',
