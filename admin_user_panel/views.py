@@ -22,6 +22,7 @@ def add_admin_info(request):
             admin = True
             admin_user = AdminUser.objects.get(username__exact=user)
             admin_admin = admin_user.Admin
+            loggedInUser = admin_user.Name
             if admin_user.Active and admin_admin:
                 if AdminUser.objects.filter(username__exact=post_data['username']).exists() or \
                         ClientUser.objects.filter(username__exact=post_data['username']).exists():
@@ -29,6 +30,7 @@ def add_admin_info(request):
                                      {'wrong': True,
                                       'text': 'Username already taken. Please try with a different username.',
                                       'admin': admin,
+                                      'loggedInUser': loggedInUser,
                                       'admin_admin': admin_admin})
                 else:
                     if post_data['re-password'] == post_data['password']:
@@ -53,12 +55,14 @@ def add_admin_info(request):
                         new_user.save()
                         display = render(request, 'add_admin.html',
                                          {'wrong': True,
+                                          'loggedInUser': loggedInUser,
                                           'text': 'The new user is added successfully',
                                           'admin': admin,
                                           'admin_admin': admin_admin})
                     else:
                         display = render(request, 'add_admin.html',
                                          {'wrong': True,
+                                          'loggedInUser': loggedInUser,
                                           'text': 'Passwords do not match. Please Try Again.',
                                           'admin': admin,
                                           'admin_admin': admin_admin})
@@ -85,6 +89,7 @@ def admin_modification(request):
 
             admin = True
             admin_user = AdminUser.objects.get(username__exact=user)
+            loggedInUser = admin_user.Name
             admin_admin = admin_user.Admin
             if admin_user.Active and admin_admin:
                 username = get_data['username']
@@ -107,6 +112,7 @@ def admin_modification(request):
                                  {'wrong': True,
                                   'text': 'Success',
                                   'admin': admin,
+                                  'loggedInUser': loggedInUser,
                                   'admin_admin': admin_admin,
                                   'all_admin_users': all_admin_users})
             else:

@@ -24,6 +24,7 @@ class Transaction(models.Model):
 class BorrowedTransaction(models.Model):
     transaction = models.ForeignKey(Transaction, related_name='theTransactionWith')
     NextDate = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    RemainAmount = models.FloatField()
     Paid = models.BooleanField(default=False)
     DateAdded = models.DateTimeField(auto_now=True, auto_now_add=False)
 
@@ -34,6 +35,7 @@ class BorrowedTransaction(models.Model):
 class LentTransaction(models.Model):
     transaction = models.ForeignKey(Transaction, related_name='theTransactionWithLent')
     NextDate = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
+    RemainAmount = models.FloatField()
     Paid = models.BooleanField(default=False)
     DateAdded = models.DateTimeField(auto_now=True, auto_now_add=False)
 

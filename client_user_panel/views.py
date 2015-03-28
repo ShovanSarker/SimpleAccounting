@@ -23,6 +23,7 @@ def add_client_info(request):
             admin = True
             admin_user = AdminUser.objects.get(username__exact=user)
             admin_admin = admin_user.Admin
+            loggedInUser = admin_user.Name
             if admin_user.Active and admin_admin:
                 client_name = post_data['client_name']
                 client_address = post_data['address']
@@ -31,6 +32,7 @@ def add_client_info(request):
                                      {'wrong': True,
                                       'text': 'There is another Client with the same name. Please Change the name.',
                                       'admin': admin,
+                                      'loggedInUser': loggedInUser,
                                       'admin_admin': admin_admin})
                 else:
 
@@ -40,6 +42,7 @@ def add_client_info(request):
                                          {'wrong': True,
                                           'text': 'Username already taken. Please try with a different username.',
                                           'admin': admin,
+                                          'loggedInUser': loggedInUser,
                                           'admin_admin': admin_admin})
                     else:
                         if post_data['re-password'] == post_data['password']:
@@ -70,12 +73,14 @@ def add_client_info(request):
                                              {'wrong': True,
                                               'text': 'The new user is added successfully',
                                               'admin': admin,
+                                              'loggedInUser': loggedInUser,
                                               'admin_admin': admin_admin})
                         else:
                             display = render(request, 'add_client.html',
                                              {'wrong': True,
                                               'text': 'Passwords do not match. Please Try Again.',
                                               'admin': admin,
+                                              'loggedInUser': loggedInUser,
                                               'admin_admin': admin_admin})
             else:
                 logout(request)
@@ -96,9 +101,9 @@ def client_modification(request):
         get_data = request.GET
         # if admin
         if AdminUser.objects.filter(username__exact=user).exists():
-
             admin = True
             admin_user = AdminUser.objects.get(username__exact=user)
+            loggedInUser = admin_user.Name
             if admin_user.Active:
                 username = get_data['username']
                 action = get_data['action']
@@ -114,6 +119,7 @@ def client_modification(request):
                 display = render(request, 'client_list.html',
                                  {'wrong': True,
                                   'text': 'Success',
+                                  'loggedInUser': loggedInUser,
                                   'admin': admin,
                                   'all_client_users': all_client_users})
             else:
@@ -140,6 +146,7 @@ def client_user_modification(request):
             client_admin = client_user.Admin
             admin_user = ClientUser.objects.get(username__exact=user)
             client_object = client_user.Client
+            loggedInUser = admin_user.Name
             all_users_of_client = ClientUser.objects.filter(Client=client_object)
             if admin_user.Active and admin_user.Admin:
                 username = get_data['username']
@@ -162,6 +169,7 @@ def client_user_modification(request):
                 display = render(request, 'client_user_list.html',
                                  {'wrong': True,
                                   'text': 'Success',
+                                  'loggedInUser': loggedInUser,
                                   'all_client_users': all_client_users,
                                   'all_client': all_users_of_client,
                                   'client': client,
@@ -188,6 +196,7 @@ def add_client_user_info(request):
         client_user = ClientUser.objects.get(username__exact=user)
         client_admin = client_user.Admin
         client_object = client_user.Client
+        loggedInUser = client_user.Name
         all_users_of_client = ClientUser.objects.filter(Client=client_object)
         if client_user.Active:
             if client_user.Admin:
@@ -202,6 +211,7 @@ def add_client_user_info(request):
                         ClientUser.objects.filter(username__exact=post_data['username']).exists():
                     display = render(request, 'add_new_client_user.html',
                                      {'wrong': True,
+                                      'loggedInUser': loggedInUser,
                                       'text': 'Username already taken. Please try with a different username.',
                                       'client': client,
                                       'client_admin': client_admin})
@@ -223,16 +233,19 @@ def add_client_user_info(request):
                                          {'wrong': True,
                                           'text': 'The new user is added successfully',
                                           'client': client,
+                                          'loggedInUser': loggedInUser,
                                           'client_admin': client_admin})
                     else:
                         display = render(request, 'add_new_client_user.html',
                                          {'wrong': True,
+                                          'loggedInUser': loggedInUser,
                                           'text': 'Passwords do not match. Please Try Again.',
                                           'client': client,
                                           'client_admin': client_admin})
             else:
                 display = render(request, 'access_denied.html',
                                  {'client': client,
+                                  'loggedInUser': loggedInUser,
                                   'client_admin': client_admin})
         else:
             logout(request)

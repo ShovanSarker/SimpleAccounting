@@ -17,7 +17,7 @@ def add_a_bank(request):
             client_user = ClientUser.objects.get(username__exact=user)
             client = True
             client_admin = client_user.Admin
-
+            loggedInUser = client_user.Name
             admin_user = ClientUser.objects.get(username__exact=user)
             if admin_user.Active:
                 if admin_user.Admin:

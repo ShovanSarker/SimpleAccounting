@@ -61,9 +61,11 @@ def receive_money(request):
                     new_transaction.save()
                     if 'loan' in post_data and post_data['loan'] == 'on':
                         if next_date == '':
-                            new_borrowed_transaction = BorrowedTransaction(transaction=new_transaction)
+                            new_borrowed_transaction = BorrowedTransaction(transaction=new_transaction,
+                                                                           RemainAmount=amount)
                         else:
                             new_borrowed_transaction = BorrowedTransaction(transaction=new_transaction,
+                                                                           RemainAmount=amount,
                                                                            NextDate=next_date)
                         new_borrowed_transaction.save()
                     display = redirect('/')
@@ -122,9 +124,11 @@ def pay_money(request):
                             new_transaction.save()
                             if 'loan' in post_data and post_data['loan'] == 'on':
                                 if next_date == '':
-                                    new_borrowed_transaction = LentTransaction(transaction=new_transaction)
+                                    new_borrowed_transaction = LentTransaction(transaction=new_transaction,
+                                                                               RemainAmount=amount)
                                 else:
                                     new_borrowed_transaction = LentTransaction(transaction=new_transaction,
+                                                                               RemainAmount=amount,
                                                                                NextDate=next_date)
                                 new_borrowed_transaction.save()
                             display = redirect('/')
@@ -177,19 +181,24 @@ def pay_due_money(request):
             client_user = ClientUser.objects.get(username__exact=user)
             client_object = client_user.Client
             if client_user.Active:
-                post_data = request.GET
-
-                transaction_object = BorrowedTransaction.objects.get(id=post_data['due'])
-                transaction_amount = transaction_object.transaction.Amount
+                post_data = request.POST
+                get_data = request.GET
+                transaction_object = BorrowedTransaction.objects.get(id=get_data['due'])
+                transaction_amount = float(post_data['amount'])
                 if post_data['type'] == 'cash':
                     balance = Cash.objects.get(ClientName=client_object).Balance
                     if balance >= transaction_amount:
-                        transaction_object.Paid = True
-                        transaction_object.save()
+                        if transaction_object.RemainAmount <= transaction_amount:
+                            transaction_object.Paid = True
+                            transaction_object.RemainAmount = 0
+                            transaction_object.save()
+                        else:
+                            transaction_object.RemainAmount -= transaction_amount
+                            transaction_object.save()
                         new_transaction = Transaction(Client=client_object,
                                                       Purpose='Pay Due',
                                                       TransactionWith=transaction_object.transaction.TransactionWith,
-                                                      Amount=transaction_object.transaction.Amount,
+                                                      Amount=transaction_amount,
                                                       Type='Cash',
                                                       Received=False,
                                                       EntryBy=client_user)
@@ -203,12 +212,17 @@ def pay_due_money(request):
                 else:
                     balance = Bank.objects.get(id=post_data['type']).Balance
                     if balance >= transaction_amount:
-                        transaction_object.Paid = True
-                        transaction_object.save()
+                        if transaction_object.RemainAmount <= transaction_amount:
+                            transaction_object.Paid = True
+                            transaction_object.RemainAmount = 0
+                            transaction_object.save()
+                        else:
+                            transaction_object.RemainAmount -= transaction_amount
+                            transaction_object.save()
                         new_transaction = Transaction(Client=client_object,
                                                       Purpose='Pay Due',
                                                       TransactionWith=transaction_object.transaction.TransactionWith,
-                                                      Amount=transaction_object.transaction.Amount,
+                                                      Amount=transaction_amount,
                                                       Type='Bank',
                                                       Bank=Bank.objects.get(id=post_data['type']),
                                                       Received=False,
@@ -242,17 +256,23 @@ def rec_due_money(request):
             client_user = ClientUser.objects.get(username__exact=user)
             client_object = client_user.Client
             if client_user.Active:
-                post_data = request.GET
+                post_data = request.POST
+                get_data = request.GET
 
-                transaction_object = LentTransaction.objects.get(id=post_data['due'])
-                transaction_amount = transaction_object.transaction.Amount
+                transaction_object = LentTransaction.objects.get(id=get_data['due'])
+                transaction_amount = float(post_data['amount'])
                 if post_data['type'] == 'cash':
-                    transaction_object.Paid = True
-                    transaction_object.save()
+                    if transaction_object.RemainAmount <= transaction_amount:
+                        transaction_object.Paid = True
+                        transaction_object.RemainAmount = 0
+                        transaction_object.save()
+                    else:
+                        transaction_object.RemainAmount -= transaction_amount
+                        transaction_object.save()
                     new_transaction = Transaction(Client=client_object,
                                                   Purpose='Receive Due',
                                                   TransactionWith=transaction_object.transaction.TransactionWith,
-                                                  Amount=transaction_object.transaction.Amount,
+                                                  Amount=transaction_amount,
                                                   Type='Cash',
                                                   Received=True,
                                                   EntryBy=client_user)
@@ -261,12 +281,17 @@ def rec_due_money(request):
                     update_transaction.Balance += transaction_amount
                     update_transaction.save()
                 else:
-                    transaction_object.Paid = True
-                    transaction_object.save()
+                    if transaction_object.RemainAmount <= transaction_amount:
+                        transaction_object.Paid = True
+                        transaction_object.RemainAmount = 0
+                        transaction_object.save()
+                    else:
+                        transaction_object.RemainAmount -= transaction_amount
+                        transaction_object.save()
                     new_transaction = Transaction(Client=client_object,
                                                   Purpose='Receive Due',
                                                   TransactionWith=transaction_object.transaction.TransactionWith,
-                                                  Amount=transaction_object.transaction.Amount,
+                                                  Amount=transaction_amount,
                                                   Type='Bank',
                                                   Bank=Bank.objects.get(id=post_data['type']),
                                                   Received=True,

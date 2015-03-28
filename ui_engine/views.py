@@ -58,6 +58,7 @@ def logout_now(request):
 @login_required(login_url='/login/')
 def home(request):
     page_title = '|Home|'
+    loggedInUser = ''
     user = request.session['user']
     if not AdminUser.objects.exists():
         print(request.session['user'])
@@ -68,8 +69,10 @@ def home(request):
         admin = True
         admin_user = AdminUser.objects.get(username__exact=user)
         admin_admin = admin_user.Admin
+        loggedInUser = admin_user.Name
         if admin_user.Active:
             display = render(request, 'dashboard.html', {'admin': admin,
+                                                         'loggedInUser': loggedInUser,
                                                          'page_title': page_title,
                                                          'admin_admin': admin_admin})
         else:
@@ -82,6 +85,7 @@ def home(request):
         client = True
         client_user = ClientUser.objects.get(username__exact=user)
         client_admin = client_user.Admin
+        loggedInUser = client_user.Name
         client_name = client_user.Client.ClientName
         if client_user.Active:
             client_object = client_user.Client
@@ -118,6 +122,7 @@ def home(request):
             display = render(request, 'client_dashboard.html', {'client': client,
                                                                 'client_name': client_name,
                                                                 'banks': banks,
+                                                                'loggedInUser': loggedInUser,
                                                                 'cash': cash,
                                                                 'page_title': page_title,
                                                                 'list_transaction': list_transaction,
@@ -157,12 +162,15 @@ def add_admin(request):
         admin = True
         admin_user = AdminUser.objects.get(username__exact=user)
         admin_admin = admin_user.Admin
+        loggedInUser = admin_user.Name
         if admin_user.Active:
             if admin_admin:
                 display = render(request, 'add_admin.html', {'admin': admin,
+                                                             'loggedInUser': loggedInUser,
                                                              'admin_admin': admin_admin})
             else:
                 display = render(request, 'access_denied.html', {'admin': admin,
+                                                                 'loggedInUser': loggedInUser,
                                                                  'admin_admin': admin_admin})
         else:
             logout(request)
@@ -186,14 +194,17 @@ def add_client(request):
         admin = True
         admin_user = AdminUser.objects.get(username__exact=user)
         admin_admin = admin_user.Admin
+        loggedInUser = admin_user.Name
         if admin_user.Active:
             if admin_admin:
                 display = render(request, 'add_client.html', {'admin': admin,
                                                               'page_title': '|Add A Client|',
+                                                              'loggedInUser': loggedInUser,
                                                               'admin_admin': admin_admin})
             else:
                 display = render(request, 'access_denied.html', {'admin': admin,
                                                                  'page_title': '|Access Denied|',
+                                                                 'loggedInUser': loggedInUser,
                                                                  'admin_admin': admin_admin})
         else:
             logout(request)
@@ -213,11 +224,13 @@ def admin_list(request):
         admin = True
         admin_user = AdminUser.objects.get(username__exact=user)
         admin_admin = admin_user.Admin
+        loggedInUser = admin_user.Name
         if admin_user.Active and admin_admin:
             all_admin_users = AdminUser.objects.all()
             display = render(request, 'admin_list.html',
                              {'admin': admin,
                               'admin_admin': admin_admin,
+                              'loggedInUser': loggedInUser,
                               'page_title': '|List Of Admins|',
                               'all_admin_users': all_admin_users})
         else:
@@ -239,11 +252,13 @@ def client_list(request):
         admin = True
         admin_user = AdminUser.objects.get(username__exact=user)
         admin_admin = admin_user.Admin
+        loggedInUser = admin_user.Name
         if admin_user.Active:
             all_client_users = Client.objects.all()
             display = render(request, 'client_list.html',
                              {'admin': admin,
                               'all_client_users': all_client_users,
+                              'loggedInUser': loggedInUser,
                               'page_title': '|List Of Clients|',
                               'admin_admin': admin_admin})
         else:
@@ -266,10 +281,12 @@ def client_users_list(request):
         client_user = ClientUser.objects.get(username__exact=user)
         client_admin = client_user.Admin
         client_object = client_user.Client
+        loggedInUser = client_user.Name
         all_users_of_client = ClientUser.objects.filter(Client=client_object)
         if client_user.Active:
             display = render(request, 'client_user_list.html', {'all_client': all_users_of_client,
                                                                 'client': client,
+                                                                'loggedInUser': loggedInUser,
                                                                 'page_title': '|Client User List|',
                                                                 'client_admin': client_admin})
         else:
@@ -294,15 +311,18 @@ def add_new_client_user(request):
         client_admin = client_user.Admin
         client_object = client_user.Client
         all_users_of_client = ClientUser.objects.filter(Client=client_object)
+        loggedInUser = client_user.Name
         if client_user.Active:
             if client_user.Admin:
                 display = render(request, 'add_new_client_user.html', {'all_client': all_users_of_client,
                                                                        'client': client,
+                                                                       'loggedInUser': loggedInUser,
                                                                        'page_title': '|Add A New User|',
                                                                        'client_admin': client_admin})
             else:
                 display = render(request, 'access_denied.html', {'all_client': all_users_of_client,
                                                                  'client': client,
+                                                                 'loggedInUser': loggedInUser,
                                                                  'page_title': '|Add A New User|',
                                                                  'client_admin': client_admin})
         else:
@@ -326,6 +346,7 @@ def transaction_by_date(request):
         client_user = ClientUser.objects.get(username__exact=user)
         client_admin = client_user.Admin
         client_object = client_user.Client
+        loggedInUser = client_user.Name
         all_users_of_client = ClientUser.objects.filter(Client=client_object)
         if client_user.Active:
             if 'start_date' in request.POST and 'stop_date' in request.POST:
@@ -337,12 +358,14 @@ def transaction_by_date(request):
                                                                        'client': client,
                                                                        'page_title': 'Transactions',
                                                                        'trans': trans,
+                                                                       'loggedInUser': loggedInUser,
                                                                        'selected': True,
                                                                        'timeframe': timeframe,
                                                                        'client_admin': client_admin})
             else:
                 display = render(request, 'transaction_by_date.html', {'all_client': all_users_of_client,
                                                                        'client': client,
+                                                                       'loggedInUser': loggedInUser,
                                                                        'page_title': '|Add A New User|',
                                                                        'client_admin': client_admin})
         else:
