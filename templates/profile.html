@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        <h1 class="page-header">{{ client_name }}</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+
+<div class="container-fluid">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            User Information
+        </div>
+        <div class="panel-body">
+            Name : {{loggedInUser}} </br>
+            Username : {{username}} </br>
+            Email : {{email}} </br>
+            Phone : {{phone}} </br>
+            Rank : {% if isadmin%} Admin {% else %} Stuff {% endif %}</br>
+            Status : {% if active%} Active {% else %} Inactive {% endif %}</br>
+            Date joined : {{joined_since}}
+        </div>
+        {% if client %}
+        <div class="panel-footer">
+            Name Of the Company : {{client_name}}</br>
+            Address of the Company : {{company_address}}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

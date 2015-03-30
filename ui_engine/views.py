@@ -6,6 +6,7 @@ from admin_user_panel.models import AdminUser
 from client_user_panel.models import Client, ClientUser, ClientUserSuggestionNames, ClientUserSuggestionPurpose
 from cash.models import Cash
 from bank.models import Bank
+from django.contrib.auth.models import User
 from transaction.models import Transaction, BorrowedTransaction, LentTransaction
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -378,3 +379,191 @@ def transaction_by_date(request):
                          {'wrong': True,
                           'text': 'Something went wrong. Please LOGIN again.'})
     return display
+
+
+@login_required(login_url='/login/')
+def profile(request):
+    page_title = '|Profile|'
+    user = request.session['user']
+    # if admin
+    if AdminUser.objects.filter(username__exact=user).exists():
+        admin = True
+        admin_user = AdminUser.objects.get(username__exact=user)
+        admin_admin = admin_user.Admin
+        loggedinuser = admin_user.Name
+        username = user
+        email = admin_user.Email
+        phone = admin_user.Phone
+        active = admin_user.Active
+        isadmin = admin_user.Admin
+        joined_since = admin_user.DateAdded
+        if admin_user.Active:
+            display = render(request, 'profile.html', {'admin': admin,
+                                                       'loggedInUser': loggedinuser,
+                                                       'page_title': page_title,
+                                                       'admin_admin': admin_admin,
+                                                       'username': username,
+                                                       'email': email,
+                                                       'phone': phone,
+                                                       'active': active,
+                                                       'isadmin': isadmin,
+                                                       'joined_since': joined_since})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    # if client
+    elif ClientUser.objects.filter(username__exact=user).exists():
+        client = True
+        client_user = ClientUser.objects.get(username__exact=user)
+        client_admin = client_user.Admin
+        loggedinuser = client_user.Name
+        client_name = client_user.Client.ClientName
+        if client_user.Active:
+            client_object = client_user.Client
+            username = user
+            email = client_user.Email
+            phone = client_user.Phone
+            active = client_user.Active
+            isadmin = client_user.Admin
+            joined_since = client_user.DateAdded
+            company_address = client_object.Address
+
+            display = render(request, 'profile.html', {'client': client,
+                                                       'client_name': client_name,
+                                                       'loggedInUser': loggedinuser,
+                                                       'page_title': page_title,
+                                                       'client_admin': client_admin,
+                                                       'username': username,
+                                                       'email': email,
+                                                       'phone': phone,
+                                                       'active': active,
+                                                       'isadmin': isadmin,
+                                                       'joined_since': joined_since,
+                                                       'company_address': company_address})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    else:
+        logout(request)
+        display = render(request, 'login.html',
+                         {'wrong': True,
+                          'text': 'Something went wrong. Please LOGIN again.'})
+    return display
+
+
+@login_required(login_url='/login/')
+def change_password(request):
+    page_title = '|Change Password|'
+    user = request.session['user']
+    post_data = request.POST
+    wrong = False
+    text = ''
+    # if admin
+    if 'csrfmiddlewaretoken' in post_data:
+        if post_data['password'] == post_data['re-password']:
+            if User.objects.filter(username=user).exists():
+                u = User.objects.get(username=user)
+                u.set_password(post_data['password'])
+                u.save()
+                wrong = True
+                text = 'Password is successfully changed'
+            else:
+                wrong = True
+                text = 'Something Wrong'
+        else:
+            wrong = True
+            text = 'Passwords do NOT match. Please try again'
+
+    if AdminUser.objects.filter(username__exact=user).exists():
+        admin = True
+        admin_user = AdminUser.objects.get(username__exact=user)
+        admin_admin = admin_user.Admin
+        loggedinuser = admin_user.Name
+        if admin_user.Active:
+            display = render(request, 'changePassword.html', {'admin': admin,
+                                                              'loggedInUser': loggedinuser,
+                                                              'page_title': page_title,
+                                                              'admin_admin': admin_admin,
+                                                              'wrong': wrong,
+                                                              'text': text})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    # if client
+    elif ClientUser.objects.filter(username__exact=user).exists():
+        client = True
+        client_user = ClientUser.objects.get(username__exact=user)
+        client_admin = client_user.Admin
+        loggedinuser = client_user.Name
+        client_name = client_user.Client.ClientName
+        if client_user.Active:
+            display = render(request, 'changePassword.html', {'client': client,
+                                                              'client_name': client_name,
+                                                              'loggedInUser': loggedinuser,
+                                                              'page_title': page_title,
+                                                              'client_admin': client_admin,
+                                                              'wrong': wrong,
+                                                              'text': text})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    else:
+        logout(request)
+        display = render(request, 'login.html',
+                         {'wrong': True,
+                          'text': 'Something went wrong. Please LOGIN again.'})
+    return display
+
+
+@csrf_exempt
+def forgot_password(request):
+    postdata = request.POST
+    print(postdata)
+    if 'username' in postdata:
+        username = postdata['username']
+        if User.objects.filter(username=username).exists():
+            u = User.objects.get(username=username)
+            useremail = u.email
+
+        else:
+            res = render(request, 'login.html',
+                         {'wrong': True,
+                          'text': 'Something went wrong. Please try again'})
+    else:
+        res = render(request, 'login.html', {'wrong': False})
+
+    res['Access-Control-Allow-Origin'] = "*"
+    res['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept"
+    res['Access-Control-Allow-Methods'] = "PUT, GET, POST, DELETE, OPTIONS"
+    return res
+
+
+visit this
+https://github.com/perenecabuto/django-sendmail-backend
+
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse, HttpResponseRedirect
+
+
+def send_email(request):
+    subject = request.POST.get('subject', '')
+    message = request.POST.get('message', '')
+    from_email = request.POST.get('from_email', '')
+    if subject and message and from_email:
+        try:
+            send_mail(subject, message, from_email, ['admin@example.com'])
+        except BadHeaderError:
+            return HttpResponse('Invalid header found.')
+        return HttpResponseRedirect('/contact/thanks/')
+    else:
+        # In reality we'd use a form class
+        # to get proper validation errors.
+        return HttpResponse('Make sure all fields are entered and valid.')

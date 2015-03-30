@@ -26,8 +26,8 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
 </head>
@@ -59,20 +59,50 @@
                                        autofocus required="">
                             </div>
 
-                            <!-- Change this to a button or input when using this as a form -->
-                            {#                            <a href="index.html" class="btn btn-lg btn-success btn-block">Login</a>#}
-                            <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
+                            <button type="submit" class="btn btn-lg btn-success btn-block">Login</button></br>
+                            <button type="button" class="btn btn-outline btn-danger btn-xs pull-right" data-toggle="modal" data-target="#forgotModal">Forgot Password</button>
                         </fieldset>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    {% if wrong %}
-        <div class="alert alert-danger alert-dismissable">
-            <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
-            <p align="center">{{ text }}</p>
+    <div class="modal fade" id="forgotModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Please enter your email address</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form role="form" action="/forgot_password/" method="POST">{% csrf_token %}
+                                <fieldset>
+                                    <div class="form-group input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                        <input class="form-control" placeholder="username" name="username" type="text"
+                                               autofocus requidred="">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary block full-width m-b">Done</button>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <!-- /.col-lg-6 (nested) -->
+                    </div>
+                </div>
+
+            </div>
         </div>
+    </div>
+    {% if wrong %}
+    <div class="alert alert-danger alert-dismissable">
+        <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+        <p align="center">{{ text }}</p>
+    </div>
     {% endif %}
 </div>
 <footer> <p class="m-t" align="center"> <small>Inflack Limited &copy; 2015</small> </p></footer>
