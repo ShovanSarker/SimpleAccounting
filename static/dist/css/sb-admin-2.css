@@ -242,19 +242,19 @@ table.dataTable thead .sorting_desc_disabled {
 }
 
 table.dataTable thead .sorting_asc:after {
-    content: "\f0de";
+    /*content: "\f0de";*/
     float: right;
     font-family: fontawesome;
 }
 
 table.dataTable thead .sorting_desc:after {
-    content: "\f0dd";
+    /*content: "\f0dd";*/
     float: right;
     font-family: fontawesome;
 }
 
 table.dataTable thead .sorting:after {
-    content: "\f0dc";
+    /*content: "\f0dc";*/
     float: right;
     font-family: fontawesome;
     color: rgba(50,50,50,.5);
@@ -371,37 +371,7 @@ table.dataTable thead .sorting:after {
     color: #d9534f;
 }
 
+.font-color-red{
+    color: red;
+}
 
-/*.btn-outline {*/
-    /*color: inherit;*/
-    /*background-color: transparent;*/
-    /*transition: all .5s;*/
-/*}*/
-
-/*.btn-primary.btn-outline {*/
-    /*color: #428bca;*/
-/*}*/
-
-/*.btn-success.btn-outline {*/
-    /*color: #5cb85c;*/
-/*}*/
-
-/*.btn-info.btn-outline {*/
-    /*color: #5bc0de;*/
-/*}*/
-
-/*.btn-warning.btn-outline {*/
-    /*color: #f0ad4e;*/
-/*}*/
-
-/*.btn-danger.btn-outline {*/
-    /*color: #d9534f;*/
-/*}*/
-
-/*.btn-primary.btn-outline:hover,*/
-/*.btn-success.btn-outline:hover,*/
-/*.btn-info.btn-outline:hover,*/
-/*.btn-warning.btn-outline:hover,*/
-/*.btn-danger.btn-outline:hover {*/
-    /*color: #fff;*/
-/*}*/

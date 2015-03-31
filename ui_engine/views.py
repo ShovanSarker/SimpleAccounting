@@ -1,3 +1,7 @@
+#!/usr/bin/python
+
+import smtplib
+from smtplib import SMTPException
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
@@ -545,25 +549,31 @@ def forgot_password(request):
     res['Access-Control-Allow-Methods'] = "PUT, GET, POST, DELETE, OPTIONS"
     return res
 
-
-visit this
-https://github.com/perenecabuto/django-sendmail-backend
-
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.core.mail import send_mail
 
 
 def send_email(request):
-    subject = request.POST.get('subject', '')
-    message = request.POST.get('message', '')
-    from_email = request.POST.get('from_email', '')
-    if subject and message and from_email:
-        try:
-            send_mail(subject, message, from_email, ['admin@example.com'])
-        except BadHeaderError:
-            return HttpResponse('Invalid header found.')
-        return HttpResponseRedirect('/contact/thanks/')
-    else:
-        # In reality we'd use a form class
-        # to get proper validation errors.
-        return HttpResponse('Make sure all fields are entered and valid.')
+    sender = 'sa@inflack.com'
+    receivers = ['exorcist.shovan@gmail.com']
+
+    message = 'text mail'
+    """From: Simple Accounting <sa@inflack.com>
+    To: To Person <to@todomain.com>
+    Subject: SMTP e-mail test
+
+    This is a test e-mail message.
+    """
+
+    try:
+        smtpObj = smtplib.SMTP('localhost')
+        # smtpObj.ehlo()
+        # smtpObj.starttls()
+        # smtpObj.ehlo()
+        # smtpObj.login(sender, 'sa@654321')
+        smtpObj.sendmail(sender, receivers, message)
+        smtpObj.quit()
+        # smtpObj.sendmail(sender, receivers, message)
+        print "Successfully sent email"
+    except SMTPException:
+        print "Error: unable to send email"
+    return redirect('/')

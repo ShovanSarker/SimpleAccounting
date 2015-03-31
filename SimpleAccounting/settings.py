@@ -71,6 +71,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'simacc',
+#         'USER': 'root',
+#         'PASSWORD': 'Dhaka@07',
+#         'default-character-set': 'utf8',
+#     }
+# }
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -83,6 +94,21 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'rsb37.rhostbh.com'
+EMAIL_HOST_USER = 'sa@inflack.com'
+EMAIL_HOST_PASSWORD = 'sa@654321'
+EMAIL_PORT = 465
+
+
+# EMAIL_BACKEND = 'django_sendmail_backend.backends.EmailBackend'
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'rsb37.rhostbh.com'
+# # EMAIL_HOST = 'localhost'
+# EMAIL_HOST_USER = 'sa@inflack.com'
+# EMAIL_HOST_PASSWORD = 'sa@654321'
+# EMAIL_PORT = 465
 
 
 # Static files (CSS, JavaScript, Images)
