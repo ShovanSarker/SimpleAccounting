@@ -5,7 +5,7 @@ from ui_engine.views import login_page, login_auth, home, logout_now, add_admin,
 from admin_user_panel.views import add_admin_info, admin_modification
 from client_user_panel.views import add_client_info, client_modification, \
     client_user_modification, add_client_user_info
-from transaction.views import receive_money, pay_money, pay_due_money, rec_due_money, transfer_money
+from transaction.views import receive_money, pay_money, pay_due_money, rec_due_money, transfer_money, buy_sell
 from bank.views import add_a_bank
 from django.conf.urls.static import static
 from django.conf import settings
@@ -41,6 +41,7 @@ urlpatterns = patterns('',
                        url(r'^profile/', view=profile, name='home'),
                        url(r'^change_password/', view=change_password, name='home'),
                        url(r'^send_email/', view=send_email, name='home'),
+                       url(r'^buy_sell/', view=buy_sell, name='home'),
                        )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

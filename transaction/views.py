@@ -368,3 +368,103 @@ def transfer_money(request):
     else:
         display = redirect('/login')
     return display
+
+
+def buy_sell(request):
+    if 'user' in request.session:
+        user = request.session['user']
+        print(request.POST)
+        # if client
+        if ClientUser.objects.filter(username__exact=user).exists():
+            client_user = ClientUser.objects.get(username__exact=user)
+            client_object = client_user.Client
+            if client_user.Active:
+                post_data = request.POST
+                if 'csrfmiddlewaretoken' in post_data:
+                    next_date = post_data['next_date']
+                    name = post_data['name']
+                    paid_amount = float(post_data['paidAmount'])
+                    total_amount = float(post_data['totalAmount'])
+                    due_amount = total_amount - paid_amount
+                    # transaction_type = post_data['transactionType']
+                    if not ClientUserSuggestionNames.objects.filter(Client=client_object, ClientNameSuggestion=name):
+                        new_name_suggestion = ClientUserSuggestionNames(Client=client_object, ClientNameSuggestion=name)
+                        new_name_suggestion.save()
+                    purpose = post_data['transactionType'] + ' : ' + post_data['purpose']
+                    remarks = post_data['remarks']
+                    t_type = post_data['type']
+                    entry_by = client_user
+
+                    if post_data['transactionType'] == 'Sell':
+                        receive = True
+                        amount = paid_amount
+                    else:
+                        receive = False
+                        amount = paid_amount * -1
+                    if t_type == 'cash':
+                        balance = Cash.objects.get(ClientName=client_object).Balance
+                    else:
+                        balance = Bank.objects.get(id=post_data['type']).Balance
+
+                    if post_data['transactionType'] == 'Buy' and balance >= paid_amount:
+                        if t_type == 'cash':
+                            new_transaction = Transaction(Client=client_object,
+                                                          Purpose=purpose,
+                                                          TransactionWith=name,
+                                                          Amount=paid_amount,
+                                                          Remarks=remarks,
+                                                          Type='Cash',
+                                                          Received=receive,
+                                                          EntryBy=entry_by)
+                            cash_update = Cash.objects.get(ClientName=client_object)
+                            cash_update.Balance += amount
+                            cash_update.save()
+                        else:
+                            bank = Bank.objects.get(id=post_data['type'])
+                            new_transaction = Transaction(Client=client_object,
+                                                          Purpose=purpose,
+                                                          TransactionWith=name,
+                                                          Amount=paid_amount,
+                                                          Remarks=remarks,
+                                                          Type='Bank',
+                                                          Bank=bank,
+                                                          EntryBy=entry_by)
+                            bank.Balance += amount
+                            bank.save()
+                        new_transaction.save()
+
+                        if due_amount > 0:
+                            if post_data['transactionType'] == 'Sell':
+                                if next_date == '':
+                                    new_due_transaction = LentTransaction(transaction=new_transaction,
+                                                                          RemainAmount=due_amount)
+                                else:
+                                    new_due_transaction = LentTransaction(transaction=new_transaction,
+                                                                          RemainAmount=due_amount,
+                                                                          NextDate=next_date)
+                                new_due_transaction.save()
+                            elif post_data['transactionType'] == 'Buy':
+                                if next_date == '':
+                                    new_due_transaction = BorrowedTransaction(transaction=new_transaction,
+                                                                              RemainAmount=due_amount)
+                                else:
+                                    new_due_transaction = BorrowedTransaction(transaction=new_transaction,
+                                                                              RemainAmount=due_amount,
+                                                                              NextDate=next_date)
+                                new_due_transaction.save()
+                        display = redirect('/')
+                    else:
+                        display = redirect('/?err=1')
+                else:
+                    display = redirect('/')
+            else:
+                logout(request)
+                display = render(request, 'login.html',
+                                 {'wrong': True,
+                                  'text': 'You are not authorized to login.'
+                                          ' Please contact administrator for more details'})
+        else:
+            display = redirect('/')
+    else:
+        display = redirect('/login')
+    return display

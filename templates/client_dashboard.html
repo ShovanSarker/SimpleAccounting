@@ -55,8 +55,8 @@
                             </li>
                             <li><a data-toggle="tab" href="#balance-transfer">Balance Transfer</a>
                             </li>
-
-
+                            <li><a data-toggle="tab" href="#buy-sell">Buy & Sell</a>
+                            </li>
                         </ul>
                     </div>
                     <!-- /.panel-heading -->
@@ -186,6 +186,70 @@
                                     </fieldset>
                                 </form>
                             </div>
+                            <div id="buy-sell" class="tab-pane fade">
+                                <form role="form" action="/buy_sell/" method="POST" id="formPayMoney">{% csrf_token %}
+                                    <fieldset>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                            <input class="form-control" list="name_suggestion" placeholder="Transaction With" id="payFrmName" name="name" type="text"
+                                                   autofocus autocomplete="off" required="">
+                                            <datalist id="name_suggestion">
+                                                {% for name in suggestion_name %}
+                                                <option value="{{name.ClientNameSuggestion}}" />
+                                                {% endfor %}
+                                            </datalist>
+                                        </div>
+                                        <label>Transaction Type</label><br>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                            <select class="form-control" name="transactionType" id="transactionType">
+                                                <option value="Buy">Buy</option>
+                                                <option value="Sell">Sell</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-tags"></i></span>
+                                            <input class="form-control" placeholder="Purpose" id="payFrmPurpose" name="purpose" type="text"
+                                                   autofocus autocomplete="off" required="">
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon">
+                                                ৳
+                                            </span>
+                                            <input class="form-control" placeholder="Total Amount" name="totalAmount" type="number" id="payFrmAmount"
+                                                   autofocus  step="any" required="">
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon">
+                                                ৳
+                                            </span>
+                                            <input class="form-control" placeholder="Paid Amount" name="paidAmount" type="number" id="payFrmAmount"
+                                                   autofocus  step="any" required="">
+                                        </div>
+                                        <label>Payment Type</label><br>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="fa fa-money"></i></span>
+                                            <select class="form-control" name="type" id="payFrmType">
+                                                <option value="cash">Cash</option>
+                                                {% for bank in banks %}
+                                                <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <input class="form-control" placeholder="Any Further Date for This Transaction" name="next_date" id="payFrmNextDate" type="date"
+                                                   autofocus>
+                                        </div>
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+                                            <input class="form-control" placeholder="Remarks" name="remarks" id="payFrmRemarks" type="text"
+                                                   autofocus>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary block full-width m-b" id="btnPayMoney">Add this Transaction</button>
+                                    </fieldset>
+                                </form>
+                            </div>
                             <div id="balance-transfer" class="tab-pane fade">
                                 <h4>Transfer Your Balance</h4>
                                 <form role="form" action="/transfer_money/" method="POST">{% csrf_token %}
@@ -243,10 +307,10 @@
                         <div class="tab-content">
                             <div id="all-transactions" class="tab-pane fade in active">
                                 <h4>List of All Transaction</h4>
-                                <div class="col-lg-10 col-md-10 col-sm-10">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="dataTable_wrapper">
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover dt-page" >
+                                            <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
                                                 <thead>
                                                 <tr>
                                                     <th>Transaction With</th>
@@ -290,9 +354,9 @@
             </div>
             <div id="money-received-pills" class="tab-pane fade">
                 <h4>List of All Receive Transaction</h4>
-                <div class="col-lg-10 col-md-10 col-sm-10">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="dataTable_wrapper">
-                        <!--<div class="table-responsive">-->
+                        <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
                             <!--<table class="table table-striped table-bordered table-hover uiDataTables paginated-table" >-->
                             <thead>
@@ -322,13 +386,13 @@
                             {% endfor %}
                             </tbody>
                         </table>
-                        <!--</div>-->
+                        </div>
                     </div>
                 </div>
             </div>
             <div id="money-paid-pills" class="tab-pane fade">
                 <h4>List of All Pay Transaction</h4>
-                <div class="col-lg-10 col-md-10 col-sm-10">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="dataTable_wrapper">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover uiDataTables dt-page">
@@ -366,7 +430,7 @@
             <div id="money-lent-pills" class="tab-pane fade">
                 <div class="row">
                     <h4>Money I will Receive</h4>
-                    <div class="col-lg-10 col-md-10 col-sm-10">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="dataTable_wrapper">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
@@ -441,7 +505,7 @@
                 </div>
                 <div class="row">
                     <h4>Money I have already Recieved</h4>
-                    <div class="col-lg-10 col-md-10 col-sm-10">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="dataTable_wrapper">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
@@ -474,7 +538,7 @@
             <div id="money-borrow-pills" class="tab-pane fade">
                 <div class="row">
                     <h4>Money I have to pay</h4>
-                    <div class="col-lg-10 col-md-10 col-sm-10">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="dataTable_wrapper">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
@@ -549,7 +613,7 @@
                 </div>
                 <div class="row">
                     <h4>Money I have already paid</h4>
-                    <div class="col-lg-10 col-md-10 col-sm-10">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="dataTable_wrapper">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover uiDataTables dt-page" >
@@ -602,7 +666,7 @@
                             <div class="tab-pane fade in active" id="banksInBanks">
                                 <h4>List of Bank Accounts</h4>
                                 <div class="row">
-                                    <div class="col-lg-10 col-md-10 col-sm-10">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
                                         <div class="dataTable_wrapper">
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-bordered table-hover uiDataTables" >
