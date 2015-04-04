@@ -65,6 +65,17 @@
                     <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
+                    {% if client %}
+                    <li>
+                        <a href="/add_new_client_user/"><i class="fa fa-table fa-fw"></i>Add a Stuff</a>
+                    </li>
+                    {% if client_admin %}
+                    <li>
+                        <a href="/client_users_list/"><i class="fa fa-edit fa-fw"></i> List of all Stuffs</a>
+                    </li>
+                    {% endif %}
+                    <li class="divider"></li>
+                    {% endif %}
                     <li><a href="/profile"><i class="fa fa-user fa-fw"></i> User Profile</a>
                     </li>
                     <li><a href="/change_password"><i class="fa fa-gear fa-fw"></i> Change Password</a>
@@ -99,18 +110,41 @@
                     {% endif %}
                 </ul>
                 {% endif %}
-                {% if client %}
+                <!--TODO-->
+                <!--{% if client %}-->
                 <ul class="nav" id="side-menu">
-                    <li>
-                        <a href="/add_new_client_user/"><i class="fa fa-table fa-fw"></i>Add a Stuff</a>
+                    <!--<li>-->
+                    <!--<a href="/add_new_client_user/"><i class="fa fa-table fa-fw"></i>Add a Stuff</a>-->
+                    <!--</li>-->
+                    <!--{% if client_admin %}-->
+                    <!--<li>-->
+                    <!--<a href="/client_users_list/"><i class="fa fa-edit fa-fw"></i> List of all Stuffs</a>-->
+                    <!--</li>-->
+                    <!--{% endif %}-->
+
+                    <li class="active"><a data-toggle="tab" href="#status-pills" aria-expanded="true">Current Status</a>
+                    </li>
+                    <li class=""><a data-toggle="tab" href="#add-new-transaction-pills" aria-expanded="false">New Transaction</a>
+                    </li>
+                    <li class=""><a data-toggle="tab" href="#all-transactions-pills" aria-expanded="false">All Transactions</a>
+                    </li>
+                    <li class=""><a data-toggle="tab" href="#money-received-pills" aria-expanded="false">Money Received</a>
+                    </li>
+                    <li class=""><a data-toggle="tab" href="#money-paid-pills" aria-expanded="false">Money Paid</a>
+                    </li>
+                    <li class=""><a data-toggle="tab" href="#money-lent-pills" aria-expanded="false">Money I owe</a>
+                    </li>
+                    <li class=""><a data-toggle="tab" href="#money-borrow-pills" aria-expanded="false">Money Others Owe</a>
                     </li>
                     {% if client_admin %}
-                    <li>
-                        <a href="/client_users_list/"><i class="fa fa-edit fa-fw"></i> List of all Stuffs</a>
+                    <li class=""><a data-toggle="tab" href="#list-banks-pills" aria-expanded="false">Banks</a>
                     </li>
                     {% endif %}
+
+
                 </ul>
-                {% endif %}
+                <!--{% endif %}-->
+                <footer> <p class="m-t foot_logo" align="left"> <img src="{% static 'src/inflack_logo.png'%}" style="width:73px;height:19px" alt="inflack"><br><small>Inflack Limited &copy; 2015</small> </p></footer>
             </div>
             <!-- /.sidebar-collapse -->
         </div>
@@ -120,7 +154,7 @@
     <div id="page-wrapper">
         {% block content %} {% endblock %}
         <!-- other things of this page -->
-        <footer> <p class="m-t" align="center"> <img src="{% static 'src/inflack_logo.png'%}" style="width:73px;height:19px" alt="inflack"><br><small>Inflack Limited &copy; 2015</small> </p></footer>
+
     </div>
     <!-- /#page-wrapper -->
 

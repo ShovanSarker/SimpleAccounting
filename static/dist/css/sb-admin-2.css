@@ -101,10 +101,14 @@ body {
 .sidebar ul li {
     border-bottom: 1px solid #e7e7e7;
 }
-
-.sidebar ul li a.active {
-    background-color: #eee;
+.sidebar ul .active{
+    background-color: #fff;
+    border-right: none;
 }
+
+/*.sidebar ul li a.active {*/
+    /*background-color: #eee;*/
+/*}*/
 
 .sidebar .arrow {
     float: right;
@@ -373,5 +377,9 @@ table.dataTable thead .sorting:after {
 
 .font-color-red{
     color: red;
+}
+
+.foot_logo{
+    padding: 220px 0 0 10px;
 }
 
