@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="sa">
+  <component name="PublishConfigData" autoUpload="Always" serverName="104.236.121.120" promptOnLocalOverwrite="false">
     <serverData>
-      <paths name="sa">
+      <paths name="104.236.121.120">
         <serverdata>
           <mappings>
             <mapping deploy="/var/www/SimpleAccounting" local="$PROJECT_DIR$" web="/" />
