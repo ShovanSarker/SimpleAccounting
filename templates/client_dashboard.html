@@ -39,7 +39,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div id="money-receive" class="tab-pane fade in active">
-                                <form role="form" action="/receive_money/" method="POST" id="formRevieveMoney">{% csrf_token %}
+                                <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/receive_money/" method="POST" id="formRevieveMoney">{% csrf_token %}
                                     <!--<form role="form" action="" method="POST">{% csrf_token %}-->
                                     <fieldset>
                                         <div class="form-group input-group">
@@ -101,7 +101,7 @@
                                 </form>
                             </div>
                             <div id="money-pay" class="tab-pane fade">
-                                <form role="form" action="/pay_money/" method="POST" id="formPayMoney">{% csrf_token %}
+                                <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/pay_money/" method="POST" id="formPayMoney">{% csrf_token %}
                                     <fieldset>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-user icon-custom"></i></span>
@@ -162,7 +162,7 @@
                                 </form>
                             </div>
                             <div id="buy-sell" class="tab-pane fade">
-                                <form role="form" action="/buy_sell/" method="POST" id="formPayMoney">{% csrf_token %}
+                                <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/buy_sell/" method="POST" id="formPayMoney">{% csrf_token %}
                                     <fieldset>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-user icon-custom"></i></span>
@@ -227,7 +227,7 @@
                             </div>
                             <div id="balance-transfer" class="tab-pane fade">
                                 <h4>Transfer Your Balance</h4>
-                                <form role="form" action="/transfer_money/" method="POST">{% csrf_token %}
+                                <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/transfer_money/" method="POST">{% csrf_token %}
                                     <fieldset>
                                         <label>Send From</label><br>
                                         <div class="form-group input-group">
@@ -553,7 +553,7 @@
                                                         <div class="modal-header">
                                                             Pay Your Due
                                                         </div>
-                                                        <form role="form" action="/pay_due_money/?due={{transaction.id}}" method="POST">{% csrf_token %}
+                                                        <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/pay_due_money/?due={{transaction.id}}" method="POST" >{% csrf_token %}
                                                             <fieldset>
                                                                 <div class="modal-body">
                                                                     <div class="container-fluid">
@@ -685,7 +685,7 @@
                             </div>
                             {% if client_admin %}
                             <div class="tab-pane fade" id="addBankInBank">
-                                <form role="form" action="/add_a_bank/" method="POST">{% csrf_token %}
+                                <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/add_a_bank/" method="POST">{% csrf_token %}
                                     <fieldset>
                                         <div class="form-group input-group">
                                             <span class="input-group-addon"><i class="fa fa-bank  icon-custom"></i></span>
