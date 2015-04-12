@@ -1,7 +1,8 @@
 from django.conf.urls import patterns, include, url
 from ui_engine.views import login_page, login_auth, home, logout_now, add_admin, add_client, \
     admin_list, client_list, client_users_list, add_new_client_user, transaction_by_date,\
-    profile, change_password, send_email
+    profile, change_password, new_transaction, all_transaction, rec_transaction,\
+    paid_transaction, borrowed_transaction,lent_transaction
 from admin_user_panel.views import add_admin_info, admin_modification
 from client_user_panel.views import add_client_info, client_modification, \
     client_user_modification, add_client_user_info
@@ -40,7 +41,12 @@ urlpatterns = patterns('',
                        url(r'^transaction_by_date/', view=transaction_by_date, name='home'),
                        url(r'^profile/', view=profile, name='home'),
                        url(r'^change_password/', view=change_password, name='home'),
-                       url(r'^send_email/', view=send_email, name='home'),
+                       url(r'^new_transaction/', view=new_transaction, name='home'),
+                       url(r'^all_transaction/', view=all_transaction, name='home'),
+                       url(r'^rec_transaction/', view=rec_transaction, name='home'),
+                       url(r'^paid_transaction/', view=paid_transaction, name='home'),
+                       url(r'^borrowed_transaction/', view=borrowed_transaction, name='home'),
+                       url(r'^lent_transaction/', view=lent_transaction, name='home'),
                        url(r'^buy_sell/', view=buy_sell, name='home'),
                        )
 

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <h1 class="page-header">{{ client_name }}</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="panel">
+    <div class="panel panel-body-custom">
+        <div class="tab-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">List of All Pay Transaction</div>
+                <div class="panel-body">
+                    <div class="col-lg-12 col-md-12 col-sm-12 no-padding">
+                        <div class="dataTable_wrapper">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover uiDataTables dt-page">
+                                    <thead>
+                                    <tr>
+                                        <th>Transaction With</th>
+                                        <th>Purpose</th>
+                                        <th>Amount</th>
+                                        <th>Payment Type</th>
+                                        <th>Remark</th>
+                                        <th>Bank</th>
+                                        <th>Entry By</th>
+                                        <th>Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for transaction in paid_transaction %}
+                                    <tr>
+                                        <td>{{transaction.TransactionWith}}</td>
+                                        <td>{{transaction.Purpose}}</td>
+                                        <td>{{transaction.Amount|floatformat:2}}</td>
+                                        <td>{{transaction.Type}}</td>
+                                        <td>{{transaction.Remarks}}</td>
+                                        <td>{{transaction.Bank.NameOfTheBank}}<br>{{transaction.Bank.AccountNumber}}</td>
+                                        <td>{{transaction.EntryBy.Name}}</td>
+                                        <td>{{transaction.DateAdded}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.panel-body -->
+</div>
+<!-- /.panel -->
+<!-- Large modal -->
+<!--<button type="button" class="btn btn-primary" id="btnReciveMoney">Large modal</button>-->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalRecieveMoney">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirm
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modalSubmitBtn">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if wrn %}
+<div class="alert alert-danger alert-dismissable">
+    <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+    <p align="center">{{ text }}</p>
+</div>
+{% endif %}
+<script src="{% static 'footable.js' %}"></script>
+{% endblock %}

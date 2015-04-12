@@ -68,7 +68,7 @@ def receive_money(request):
                                                                            RemainAmount=amount,
                                                                            NextDate=next_date)
                         new_borrowed_transaction.save()
-                    display = redirect('/')
+                    display = redirect('/new_transaction')
             else:
                 logout(request)
                 display = render(request, 'login.html',
@@ -131,9 +131,9 @@ def pay_money(request):
                                                                                RemainAmount=amount,
                                                                                NextDate=next_date)
                                 new_borrowed_transaction.save()
-                            display = redirect('/')
+                            display = redirect('/new_transaction')
                         else:
-                            display = redirect('/?err=1')
+                            display = redirect('/new_transaction/?err=1')
                     else:
                         bank = Bank.objects.get(id=post_data['type'])
                         if amount <= bank.Balance:
@@ -156,9 +156,9 @@ def pay_money(request):
                                     new_borrowed_transaction = LentTransaction(transaction=new_transaction,
                                                                                NextDate=next_date)
                                 new_borrowed_transaction.save()
-                            display = redirect('/')
+                            display = redirect('/new_transaction')
                         else:
-                            display = redirect('/?err=1')
+                            display = redirect('/new_transaction/?err=1')
             else:
                 logout(request)
                 display = render(request, 'login.html',
@@ -206,9 +206,9 @@ def pay_due_money(request):
                         update_transaction = Cash.objects.get(ClientName=client_object)
                         update_transaction.Balance -= transaction_amount
                         update_transaction.save()
-                        display = redirect('/')
+                        display = redirect('/borrowed_transaction')
                     else:
-                        display = redirect('/?err=1')
+                        display = redirect('/borrowed_transaction/?err=1')
                 else:
                     balance = Bank.objects.get(id=post_data['type']).Balance
                     if balance >= transaction_amount:
@@ -231,9 +231,9 @@ def pay_due_money(request):
                         update_transaction = Bank.objects.get(id=post_data['type'])
                         update_transaction.Balance -= transaction_amount
                         update_transaction.save()
-                        display = redirect('/')
+                        display = redirect('/borrowed_transaction')
                     else:
-                        display = redirect('/?err=1')
+                        display = redirect('/borrowed_transaction/?err=1')
             else:
                 logout(request)
                 display = render(request, 'login.html',
@@ -300,7 +300,7 @@ def rec_due_money(request):
                     update_transaction = Bank.objects.get(id=post_data['type'])
                     update_transaction.Balance += transaction_amount
                     update_transaction.save()
-                display = redirect('/')
+                display = redirect('/lent_transaction')
             else:
                 logout(request)
                 display = render(request, 'login.html',
@@ -354,9 +354,9 @@ def transfer_money(request):
                                                   Received=True,
                                                   EntryBy=client_user)
                     new_transaction.save()
-                    display = redirect('/')
+                    display = redirect('/new_transaction')
                 else:
-                    display = redirect('/?err=1')
+                    display = redirect('/new_transaction/?err=1')
             else:
                 logout(request)
                 display = render(request, 'login.html',

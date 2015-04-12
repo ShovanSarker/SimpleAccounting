@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="sa">
+  <component name="PublishConfigData" autoUpload="Always" serverName="sa" promptOnLocalOverwrite="false">
     <serverData>
       <paths name="sa">
         <serverdata>

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     {% load static %}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,14 +22,17 @@
     <!-- Timeline CSS -->
     <link href="{% static 'dist/css/timeline.css' %}" rel="stylesheet">
 
-    <!-- Custom CSS -->
-    <link href="{% static 'dist/css/sb-admin-2.css' %}" rel="stylesheet">
-
     <!-- Morris Charts CSS -->
     <link href="{% static 'bower_components/morrisjs/morris.css' %}" rel="stylesheet">
 
+    <!-- Custom CSS -->
+    <link href="{% static 'dist/css/sb-admin-2.css' %}" rel="stylesheet">
+
     <!-- Custom Fonts -->
     <link href="{% static 'bower_components/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+
+
+
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -43,130 +47,127 @@
 <body>
 
 <div id="wrapper">
+    <div class="row">
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Simple Accounting v1.0.1</a>
+            </div>
+            <!-- /.navbar-header -->
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Simple Accounting v1.0.1</a>
-        </div>
-        <!-- /.navbar-header -->
+            <ul class="nav navbar-top-links navbar-right shift-right">
+                Hello, <b>{{loggedInUser}} </b>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        {% if client %}
+                        <li>
+                            <a href="/add_new_client_user/"><i class="fa fa-table fa-fw"></i>Add a Stuff</a>
+                        </li>
+                        {% if client_admin %}
+                        <li>
+                            <a href="/client_users_list/"><i class="fa fa-edit fa-fw"></i> List of all Stuffs</a>
+                        </li>
+                        {% endif %}
+                        <li class="divider"></li>
+                        {% endif %}
+                        <li><a href="/profile"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li>
+                        <li><a href="/change_password"><i class="fa fa-gear fa-fw"></i> Change Password</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
 
-        <ul class="nav navbar-top-links navbar-right">
-            <!-- /.dropdown -->
-            Hello, <b>{{loggedInUser}}</b>
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    {% if client %}
-                    <li>
-                        <a href="/add_new_client_user/"><i class="fa fa-table fa-fw"></i>Add a Stuff</a>
-                    </li>
-                    {% if client_admin %}
-                    <li>
-                        <a href="/client_users_list/"><i class="fa fa-edit fa-fw"></i> List of all Stuffs</a>
-                    </li>
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse collapse">
+                    {% if admin %}
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="/client_list"><i class="fa fa-table fa-fw"></i> List Client</a>
+                        </li>
+                        {% if admin_admin %}
+                        <li>
+                            <a href="/add_client"><i class="fa fa-edit fa-fw"></i> Add More Client</a>
+                        </li>
+                        <li>
+                            <a href="/add_admin"><i class="fa fa-edit fa-fw"></i> Add More Admin</a>
+                        </li>
+                        <li>
+                            <a href="/admin_list"><i class="fa fa-edit fa-fw"></i> View All Admin Users</a>
+                        </li>
+                        {% endif %}
+                    </ul>
                     {% endif %}
-                    <li class="divider"></li>
-                    {% endif %}
-                    <li><a href="/profile"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                    </li>
-                    <li><a href="/change_password"><i class="fa fa-gear fa-fw"></i> Change Password</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                    </li>
-                </ul>
-                <!-- /.dropdown-user -->
-            </li>
-            <!-- /.dropdown -->
-        </ul>
-        <!-- /.navbar-top-links -->
+                    <!--TODO-->
+                    <!--{% if client %}-->
+                    <ul class="nav nav-left" id="side-menu">
+                        <!--<li>-->
+                        <!--<a href="/add_new_client_user/"><i class="fa fa-table fa-fw"></i>Add a Stuff</a>-->
+                        <!--</li>-->
+                        <!--{% if client_admin %}-->
+                        <!--<li>-->
+                        <!--<a href="/client_users_list/"><i class="fa fa-edit fa-fw"></i> List of all Stuffs</a>-->
+                        <!--</li>-->
+                        <!--{% endif %}-->
 
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                {% if admin %}
-                <ul class="nav" id="side-menu">
-                    <li>
-                        <a href="/client_list"><i class="fa fa-table fa-fw"></i> List Client</a>
-                    </li>
-                    {% if admin_admin %}
-                    <li>
-                        <a href="/add_client"><i class="fa fa-edit fa-fw"></i> Add More Client</a>
-                    </li>
-                    <li>
-                        <a href="/add_admin"><i class="fa fa-edit fa-fw"></i> Add More Admin</a>
-                    </li>
-                    <li>
-                        <a href="/admin_list"><i class="fa fa-edit fa-fw"></i> View All Admin Users</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                {% endif %}
-                <!--TODO-->
-                <!--{% if client %}-->
-                <ul class="nav" id="side-menu">
-                    <!--<li>-->
-                    <!--<a href="/add_new_client_user/"><i class="fa fa-table fa-fw"></i>Add a Stuff</a>-->
-                    <!--</li>-->
-                    <!--{% if client_admin %}-->
-                    <!--<li>-->
-                    <!--<a href="/client_users_list/"><i class="fa fa-edit fa-fw"></i> List of all Stuffs</a>-->
-                    <!--</li>-->
+                        <li class="active"><a href="/" aria-expanded="true">Current Status</a>
+                        </li>
+                        <li class=""><a href="/new_transaction" aria-expanded="false">New Transaction</a>
+                        </li>
+                        <li class=""><a href="/all_transaction" aria-expanded="false">All Transactions</a>
+                        </li>
+                        <li class=""><a href="/rec_transaction" aria-expanded="false">Money Received</a>
+                        </li>
+                        <li class=""><a href="/paid_transaction" aria-expanded="false">Money Paid</a>
+                        </li>
+                        <li class=""><a href="/lent_transaction" aria-expanded="false">Money I owe</a>
+                        </li>
+                        <li class=""><a href="/borrowed_transaction" aria-expanded="false">Money Others Owe</a>
+                        </li>
+                        {% if client_admin %}
+                        <li class=""><a data-toggle="tab" href="#list-banks-pills" aria-expanded="false">Banks</a>
+                        </li>
+                        {% endif %}
+
+
+                    </ul>
                     <!--{% endif %}-->
 
-                    <li class="active"><a data-toggle="tab" href="#status-pills" aria-expanded="true">Current Status</a>
-                    </li>
-                    <li class=""><a data-toggle="tab" href="#add-new-transaction-pills" aria-expanded="false">New Transaction</a>
-                    </li>
-                    <li class=""><a data-toggle="tab" href="#all-transactions-pills" aria-expanded="false">All Transactions</a>
-                    </li>
-                    <li class=""><a data-toggle="tab" href="#money-received-pills" aria-expanded="false">Money Received</a>
-                    </li>
-                    <li class=""><a data-toggle="tab" href="#money-paid-pills" aria-expanded="false">Money Paid</a>
-                    </li>
-                    <li class=""><a data-toggle="tab" href="#money-lent-pills" aria-expanded="false">Money I owe</a>
-                    </li>
-                    <li class=""><a data-toggle="tab" href="#money-borrow-pills" aria-expanded="false">Money Others Owe</a>
-                    </li>
-                    {% if client_admin %}
-                    <li class=""><a data-toggle="tab" href="#list-banks-pills" aria-expanded="false">Banks</a>
-                    </li>
-                    {% endif %}
-
-
-                </ul>
-                <!--{% endif %}-->
-                <footer> <p class="m-t foot_logo" align="left"> <img src="{% static 'src/inflack_logo.png'%}" style="width:73px;height:19px" alt="inflack"><br><small>Inflack Limited &copy; 2015</small> </p></footer>
+                </div>
+                <!-- /.sidebar-collapse -->
             </div>
-            <!-- /.sidebar-collapse -->
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            {% block content %} {% endblock %}
         </div>
-        <!-- /.navbar-static-side -->
-    </nav>
-
-    <div id="page-wrapper">
-        {% block content %} {% endblock %}
-        <!-- other things of this page -->
-
+        <!-- /#page-wrapper -->
     </div>
-    <!-- /#page-wrapper -->
-
-    <!-- footer -->
+    <div class="row">
+        <p class="m-t foot_logo" align="left"> <img src="{% static 'src/inflack_logo.png'%}" style="width:73px;height:19px" alt="inflack"><br><small>Inflack Limited &copy; 2015</small> </p>
+    </div>
 </div>
 <!-- /#wrapper -->
 
-
-
 <!-- jQuery -->
-<!--<script src="{% static 'bower_components/datatables/media/js/jquery.dataTables.js' %}"></script>-->
-<!--<script src="{% static 'bower_components/datatables-plugins/pagination/jPaginator/dataTables.jPaginator.js' %}"></script>-->
 <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
 <!-- jQuery -->
 <!--<script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>-->

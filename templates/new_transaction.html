@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <h1 class="page-header">{{ client_name }}</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="panel">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#money-receive">Receive Money</a>
+                </li>
+                <li><a data-toggle="tab" href="#money-pay">Pay Money</a>
+                </li>
+                <li><a data-toggle="tab" href="#balance-transfer">Balance Transfer</a>
+                </li>
+                <li><a data-toggle="tab" href="#buy-sell">Buy & Sell</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div id="money-receive" class="tab-pane fade in active">
+                    <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/receive_money/" method="POST" id="formRevieveMoney">{% csrf_token %}
+                        <!--<form role="form" action="" method="POST">{% csrf_token %}-->
+                        <fieldset>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-user  icon-custom"></i></span>
+                                <input class="form-control" list="name_suggestion" placeholder="Received From" name="name" id="rcvFrmName" type="text"
+                                       autofocus autocomplete="off" required="">
+                                <datalist id="name_suggestion">
+                                    {% for name in suggestion_name %}
+                                    <option value="{{name.ClientNameSuggestion}}" />
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-tags icon-custom"></i></span>
+                                <input class="form-control" list="purpose_suggestion" placeholder="Purpose" id="rcvFrmPurpose" name="purpose" type="text"
+                                       autofocus autocomplete="off" required="">
+                                <datalist id="purpose_suggestion">
+                                    {% for purpose in suggestion_purpose %}
+                                    <option value="{{purpose.ClientPurposeSuggestion}}" />
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="form-group input-group">
+                                            <span class="input-group-addon">
+                                                <!--<i class="fa fa-usd"></i>-->
+                                                <div class=" icon-custom">৳</div>
+                                            </span>
+                                <input class="form-control" placeholder="Amount" id="rcvFrmAmount" name="amount" type="number"
+                                       autofocus  step="any" required="">
+                            </div>
+                            <label>Payment Type</label><br>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-money icon-custom"></i></span>
+                                <select class="form-control" id="rcvFrmType" name="type">
+                                    <option value="cash">Cash</option>
+                                    {% for bank in banks %}
+                                    <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Is this a loan :</label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="rcvFrmLoan" name="loan">(Please check if it is a loan)
+                                </label>
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar  icon-custom"></i></span>
+                                <input class="form-control" placeholder="Any Further Date for This Transaction" id="rcvFrmNextDate" name="next_date" type="date"
+                                       autofocus>
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-pencil icon-custom"></i></span>
+                                <input class="form-control" placeholder="Remarks" id="rcvFrmRemarks" name="remarks" type="text"
+                                       autofocus>
+                            </div>
+                            <button type="submit" class="btn btn-primary block full-width m-b" id="btnReciveMoney">Add this Transaction</button>
+                        </fieldset>
+                    </form>
+                </div>
+                <div id="money-pay" class="tab-pane fade">
+                    <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/pay_money/" method="POST" id="formPayMoney">{% csrf_token %}
+                        <fieldset>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-user icon-custom"></i></span>
+                                <input class="form-control" list="name_suggestion" placeholder="Paid to" id="payFrmName" name="name" type="text"
+                                       autofocus autocomplete="off" required="">
+                                <datalist id="name_suggestion">
+                                    {% for name in suggestion_name %}
+                                    <option value="{{name.ClientNameSuggestion}}" />
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-tags icon-custom"></i></span>
+                                <input class="form-control" list="purpose_suggestion" placeholder="Purpose" id="payFrmPurpose" name="purpose" type="text"
+                                       autofocus autocomplete="off" required="">
+                                <datalist id="purpose_suggestion">
+                                    {% for purpose in suggestion_purpose %}
+                                    <option value="{{purpose.ClientPurposeSuggestion}}" />
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="form-group input-group">
+                                            <span class="input-group-addon">
+                                                <!--<i class="fa fa-usd"></i>-->
+                                                <div class=" icon-custom">৳</div>
+                                            </span>
+                                <input class="form-control" placeholder="Amount" name="amount" type="number" id="payFrmAmount"
+                                       autofocus  step="any" required="">
+                            </div>
+                            <label>Payment Type</label><br>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-money icon-custom"></i></span>
+                                <select class="form-control" name="type" id="payFrmType">
+                                    <option value="cash">Cash</option>
+                                    {% for bank in banks %}
+                                    <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Is this a loan :</label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="loan" id="payFrmLoan">(Please check if it is a loan)
+                                </label>
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar icon-custom"></i></span>
+                                <input class="form-control" placeholder="Any Further Date for This Transaction" name="next_date" id="payFrmNextDate" type="date"
+                                       autofocus>
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-pencil icon-custom"></i></span>
+                                <input class="form-control" placeholder="Remarks" name="remarks" id="payFrmRemarks" type="text"
+                                       autofocus>
+                            </div>
+                            <button type="submit" class="btn btn-primary block full-width m-b" id="btnPayMoney">Add this Transaction</button>
+                        </fieldset>
+                    </form>
+                </div>
+                <div id="buy-sell" class="tab-pane fade">
+                    <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/buy_sell/" method="POST" id="formPayMoney">{% csrf_token %}
+                        <fieldset>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-user icon-custom"></i></span>
+                                <input class="form-control" list="name_suggestion" placeholder="Transaction With" id="payFrmName" name="name" type="text"
+                                       autofocus autocomplete="off" required="">
+                                <datalist id="name_suggestion">
+                                    {% for name in suggestion_name %}
+                                    <option value="{{name.ClientNameSuggestion}}" />
+                                    {% endfor %}
+                                </datalist>
+                            </div>
+                            <label>Transaction Type</label><br>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-money icon-custom"></i></span>
+                                <select class="form-control" name="transactionType" id="transactionType">
+                                    <option value="Buy">Buy</option>
+                                    <option value="Sell">Sell</option>
+                                </select>
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-tags icon-custom"></i></span>
+                                <input class="form-control" placeholder="Purpose" id="payFrmPurpose" name="purpose" type="text"
+                                       autofocus autocomplete="off" required="">
+                            </div>
+                            <div class="form-group input-group">
+                                            <span class="input-group-addon">
+                                                <div class=" icon-custom">৳</div>
+                                            </span>
+                                <input class="form-control" placeholder="Total Amount" name="totalAmount" type="number" id="payFrmAmount"
+                                       autofocus  step="any" required="">
+                            </div>
+                            <div class="form-group input-group">
+                                            <span class="input-group-addon">
+                                                <div class=" icon-custom">৳</div>
+                                            </span>
+                                <input class="form-control" placeholder="Paid Amount" name="paidAmount" type="number" id="payFrmAmount"
+                                       autofocus  step="any" required="">
+                            </div>
+                            <label>Payment Type</label><br>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-money icon-custom"></i></span>
+                                <select class="form-control" name="type" id="payFrmType">
+                                    <option value="cash">Cash</option>
+                                    {% for bank in banks %}
+                                    <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar icon-custom"></i></span>
+                                <input class="form-control" placeholder="Any Further Date for This Transaction" name="next_date" id="payFrmNextDate" type="date"
+                                       autofocus>
+                            </div>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-pencil icon-custom"></i></span>
+                                <input class="form-control" placeholder="Remarks" name="remarks" id="payFrmRemarks" type="text"
+                                       autofocus>
+                            </div>
+                            <button type="submit" class="btn btn-primary block full-width m-b" id="btnPayMoney">Add this Transaction</button>
+                        </fieldset>
+                    </form>
+                </div>
+                <div id="balance-transfer" class="tab-pane fade">
+                    <h4>Transfer Your Balance</h4>
+                    <form class="col-lg-7 col-md-8 col-sm-12" role="form" action="/transfer_money/" method="POST">{% csrf_token %}
+                        <fieldset>
+                            <label>Send From</label><br>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-money icon-custom"></i></span>
+                                <select class="form-control" name="from">
+                                    <option value="cash">Cash-Balance:{{cash.Balance|floatformat:2}}BDT</option>
+                                    {% for bank in banks %}
+                                    <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})-Balance:{{bank.Balance|floatformat:2}} BDT</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group input-group">
+                                            <span class="input-group-addon">
+                                                <!--<i class="fa fa-usd"></i>-->
+                                                <div class=" icon-custom">৳</div>
+                                            </span>
+                                <input class="form-control" placeholder="Amount" name="amount" type="number"
+                                       autofocus  step="any" required="">
+                            </div>
+                            <label>Send To</label><br>
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-money icon-custom"></i></span>
+                                <select class="form-control" name="to">
+                                    <option value="cash">Cash</option>
+                                    {% for bank in banks %}
+                                    <option value="{{bank.id}}">{{bank.NameOfTheBank}}({{bank.AccountNumber}})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary block full-width m-b">Add this Transaction</button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.panel-body -->
+    </div>
+</div>
+<!-- /.panel -->
+<!-- Large modal -->
+<!--<button type="button" class="btn btn-primary" id="btnReciveMoney">Large modal</button>-->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="modalRecieveMoney">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirm
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="modalSubmitBtn">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if wrn %}
+<div class="alert alert-danger alert-dismissable">
+    <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+    <p align="center">{{ text }}</p>
+</div>
+{% endif %}
+<script src="{% static 'footable.js' %}"></script>
+{% endblock %}

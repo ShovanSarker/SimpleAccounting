@@ -18,7 +18,7 @@ body {
 
 #page-wrapper {
     padding: 0 15px;
-    min-height: 568px;
+    min-height: 300px;
     background-color: #fff;
 }
 
@@ -27,7 +27,8 @@ body {
         position: inherit;
         margin: 0 0 0 250px;
         padding: 0 30px;
-        border-left: 1px solid #e7e7e7;
+        border-left: none;
+        min-height: 400px;
     }
 }
 
@@ -380,7 +381,8 @@ table.dataTable thead .sorting:after {
 }
 
 .foot_logo{
-    padding: 220px 0 0 10px;
+    padding-left: 25px;
+    text-align: center;
 }
 
 .center-text{
@@ -394,4 +396,32 @@ table.dataTable thead .sorting:after {
 
 .panel-body-custom {
     padding: 0;
+}
+
+.nav{
+    padding-left: 7px;
+}
+
+.navbar-brand{
+    padding: 20px
+}
+
+.shift-right{
+    text-align: right;
+}
+
+.shift-left{
+    text-align: left!important;
+}
+
+.height-control{
+    min-height: 400px;
+}
+
+.nav-left li{
+    border-right: #e7e7e7 1px solid;
+}
+
+.nav-left .active{
+    border-right: none !important;
 }
