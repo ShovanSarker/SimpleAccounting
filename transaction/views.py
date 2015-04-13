@@ -452,7 +452,7 @@ def buy_sell(request):
                                                                               RemainAmount=due_amount,
                                                                               NextDate=next_date)
                                 new_due_transaction.save()
-                        display = redirect('/')
+                        display = redirect('/banks')
                     else:
                         display = redirect('/?err=1')
                 else:

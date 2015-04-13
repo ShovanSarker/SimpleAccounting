@@ -31,7 +31,7 @@ def add_a_bank(request):
                                     AccountNumber=bank_account,
                                     Balance=bank_balance)
                     new_bank.save()
-                    display = redirect('/')
+                    display = redirect('/banks')
             else:
                 logout(request)
                 display = render(request, 'login.html',

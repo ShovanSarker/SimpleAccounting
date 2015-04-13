@@ -1024,3 +1024,87 @@ def lent_transaction(request):
                           'text': 'Something went wrong. Please LOGIN again.'})
     return display
 
+
+@login_required(login_url='/login/')
+def banks(request):
+    page_title = 'Lent Transaction'
+    loggedInUser = ''
+    user = request.session['user']
+    if not AdminUser.objects.exists():
+        print(request.session['user'])
+        new_admin = AdminUser(username=user, Name=user, Email=user+'@inflack.com', Admin=True)
+        new_admin.save()
+    # if admin
+    if AdminUser.objects.filter(username__exact=user).exists():
+        admin = True
+        admin_user = AdminUser.objects.get(username__exact=user)
+        admin_admin = admin_user.Admin
+        loggedInUser = admin_user.Name
+        if admin_user.Active:
+            display = render(request, 'dashboard.html', {'admin': admin,
+                                                         'loggedInUser': loggedInUser,
+                                                         'page_title': page_title,
+                                                         'admin_admin': admin_admin})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    # if client
+    elif ClientUser.objects.filter(username__exact=user).exists():
+        client = True
+        client_user = ClientUser.objects.get(username__exact=user)
+        client_admin = client_user.Admin
+        loggedInUser = client_user.Name
+        client_name = client_user.Client.ClientName
+        if client_user.Active:
+            client_object = client_user.Client
+            banks = Bank.objects.filter(ClientName=client_object, Active=True)
+            cash = Cash.objects.get(ClientName=client_object)
+            suggestion_name = ClientUserSuggestionNames.objects.filter(Client=client_object)
+            suggestion_purpose = ClientUserSuggestionPurpose.objects.filter(Client=client_object)
+
+            list_transaction = Transaction.objects.filter(Client=client_object)
+
+            received_transaction = Transaction.objects.filter(Client=client_object, Received=True)
+            paid_transaction = Transaction.objects.filter(Client=client_object, Received=False)
+            borrowed_transaction = BorrowedTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=False)
+            borrowed_transaction_paid = BorrowedTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=True)
+            lent_transaction = LentTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=False)
+            lent_transaction_paid = LentTransaction.objects.filter(transaction=Transaction.objects.filter(Client=client_object), Paid=True)
+            if 'err' in request.GET and request.GET['err'] == '1':
+                wrn = True
+                text = 'Insufficient Balance'
+            else:
+                wrn = False
+                text = ''
+            display = render(request, 'banks.html', {'client': client,
+                                                                    'client_name': client_name,
+                                                                    'banks': banks,
+                                                                    'loggedInUser': loggedInUser,
+                                                                    'cash': cash,
+                                                                    'page_title': page_title,
+                                                                    # 'list_transaction': list_transaction,
+                                                                    # 'received_transaction': received_transaction,
+                                                                    # 'paid_transaction': paid_transaction,
+                                                                    'suggestion_name': suggestion_name,
+                                                                    'suggestion_purpose': suggestion_purpose,
+                                                                    # 'borrowed_transaction': borrowed_transaction,
+                                                                    # 'borrowed_transaction_paid': borrowed_transaction_paid,
+                                                                    'lent_transaction': lent_transaction,
+                                                                    'lent_transaction_paid': lent_transaction_paid,
+                                                                    'wrn': wrn,
+                                                                    'text': text,
+                                                                    'client_admin': client_admin})
+        else:
+            logout(request)
+            display = render(request, 'login.html',
+                             {'wrong': True,
+                              'text': 'You are not authorized to login. Please contact administrator for more details'})
+    else:
+        logout(request)
+        display = render(request, 'login.html',
+                         {'wrong': True,
+                          'text': 'Something went wrong. Please LOGIN again.'})
+    return display
+
