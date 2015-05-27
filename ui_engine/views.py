@@ -104,6 +104,7 @@ def home(request):
                 wrn = False
                 text = ''
             display = render(request, 'client_dashboard.html', {'client': client,
+                                                                'home_active': True,
                                                                 'client_name': client_name,
                                                                 'banks': banks,
                                                                 'loggedInUser': loggedInUser,
@@ -578,6 +579,7 @@ def new_transaction(request):
                                                                'loggedInUser': loggedInUser,
                                                                'cash': cash,
                                                                'page_title': page_title,
+                                                               'new_transaction_active': True,
                                                                # 'list_transaction': list_transaction,
                                                                # 'received_transaction': received_transaction,
                                                                # 'paid_transaction': paid_transaction,
@@ -664,6 +666,7 @@ def all_transaction(request):
                                                                'cash': cash,
                                                                'page_title': page_title,
                                                                'list_transaction': list_transaction,
+                                                               'all_transaction_active': True,
                                                                # 'received_transaction': received_transaction,
                                                                # 'paid_transaction': paid_transaction,
                                                                'suggestion_name': suggestion_name,
@@ -751,6 +754,7 @@ def rec_transaction(request):
                                                                'received_transaction': received_transaction,
                                                                # 'paid_transaction': paid_transaction,
                                                                'suggestion_name': suggestion_name,
+                                                               'rec_transaction_active': True,
                                                                'suggestion_purpose': suggestion_purpose,
                                                                # 'borrowed_transaction': borrowed_transaction,
                                                                # 'borrowed_transaction_paid': borrowed_transaction_paid,
@@ -835,6 +839,7 @@ def paid_transaction(request):
                                                                 # 'list_transaction': list_transaction,
                                                                 # 'received_transaction': received_transaction,
                                                                 'paid_transaction': paid_transaction,
+                                                                'paid_transaction_active': True,
                                                                 'suggestion_name': suggestion_name,
                                                                 'suggestion_purpose': suggestion_purpose,
                                                                 # 'borrowed_transaction': borrowed_transaction,
@@ -918,6 +923,7 @@ def borrowed_transaction(request):
                                                                     'page_title': page_title,
                                                                     # 'list_transaction': list_transaction,
                                                                     # 'received_transaction': received_transaction,
+                                                                    'borrowed_transaction_active': True,
                                                                     # 'paid_transaction': paid_transaction,
                                                                     'suggestion_name': suggestion_name,
                                                                     'suggestion_purpose': suggestion_purpose,
@@ -1005,6 +1011,7 @@ def lent_transaction(request):
                                                                     # 'paid_transaction': paid_transaction,
                                                                     'suggestion_name': suggestion_name,
                                                                     'suggestion_purpose': suggestion_purpose,
+                                                                    'lent_transaction_active': True,
                                                                     # 'borrowed_transaction': borrowed_transaction,
                                                                     # 'borrowed_transaction_paid': borrowed_transaction_paid,
                                                                     'lent_transaction': lent_transaction,
@@ -1089,6 +1096,7 @@ def banks(request):
                                                                     # 'paid_transaction': paid_transaction,
                                                                     'suggestion_name': suggestion_name,
                                                                     'suggestion_purpose': suggestion_purpose,
+                                                                    'banks_active': True,
                                                                     # 'borrowed_transaction': borrowed_transaction,
                                                                     # 'borrowed_transaction_paid': borrowed_transaction_paid,
                                                                     'lent_transaction': lent_transaction,
@@ -1108,3 +1116,6 @@ def banks(request):
                           'text': 'Something went wrong. Please LOGIN again.'})
     return display
 
+@csrf_exempt
+def test(request):
+    return render(request, 'test.html')

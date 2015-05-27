@@ -126,22 +126,22 @@
                         <!--</li>-->
                         <!--{% endif %}-->
 
-                        <li class="active"><a href="/" aria-expanded="true">Current Status</a>
+                        <li class="{% if home_active %}active{% endif %}"><a href="/" aria-expanded="{% if home_active %}true{% else %}false{% endif %}">Current Status</a>
                         </li>
-                        <li class=""><a href="/new_transaction" aria-expanded="false">New Transaction</a>
+                        <li class="{% if new_transaction_active %}active{% endif %}"><a href="/new_transaction" aria-expanded="{% if new_transaction_active %}true{% else %}false{% endif %}">New Transaction</a>
                         </li>
-                        <li class=""><a href="/all_transaction" aria-expanded="false">All Transactions</a>
+                        <li class="{% if all_transaction_active %}active{% endif %}"><a href="/all_transaction" aria-expanded="{% if all_transaction_active %}true{% else %}false{% endif %}">All Transactions</a>
                         </li>
-                        <li class=""><a href="/rec_transaction" aria-expanded="false">Money Received</a>
+                        <li class="{% if rec_transaction_active %}active{% endif %}"><a href="/rec_transaction" aria-expanded="{% if rec_transaction_active %}true{% else %}false{% endif %}">Money Received</a>
                         </li>
-                        <li class=""><a href="/paid_transaction" aria-expanded="false">Money Paid</a>
+                        <li class="{% if paid_transaction_active %}active{% endif %}"><a href="/paid_transaction" aria-expanded="{% if paid_transaction_active %}true{% else %}false{% endif %}">Money Paid</a>
                         </li>
-                        <li class=""><a href="/lent_transaction" aria-expanded="false">Money I owe</a>
+                        <li class="{% if lent_transaction_active %}active{% endif %}"><a href="/lent_transaction" aria-expanded="{% if lent_transaction_active %}true{% else %}false{% endif %}">Money I owe</a>
                         </li>
-                        <li class=""><a href="/borrowed_transaction" aria-expanded="false">Money Others Owe</a>
+                        <li class="{% if borrowed_transaction_active %}active{% endif %}"><a href="/borrowed_transaction" aria-expanded="{% if borrowed_transaction_active %}true{% else %}false{% endif %}">Money Others Owe</a>
                         </li>
                         {% if client_admin %}
-                        <li class=""><a href="/banks" aria-expanded="false">Banks</a>
+                        <li class="{% if banks_active %}active{% endif %}"><a href="/banks" aria-expanded="{% if banks_active %}true{% else %}false{% endif %}">Banks</a>
                         </li>
                         {% endif %}
 
